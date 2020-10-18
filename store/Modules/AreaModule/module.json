@@ -1,0 +1,13 @@
+{
+    "name": "AreaModule",
+    "alias": "areamodule",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\AreaModule\\Providers\\AreaModuleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

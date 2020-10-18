@@ -1,5 +1,6 @@
 {
     "CommonModule": true,
     "ConfigModule": true,
-    "UiModule": true
+    "UiModule": true,
+    "AreaModule": true
 }
