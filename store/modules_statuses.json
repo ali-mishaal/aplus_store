@@ -1,0 +1,5 @@
+{
+    "CommonModule": true,
+    "ConfigModule": true,
+    "UiModule": true
+}

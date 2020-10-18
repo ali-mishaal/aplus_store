@@ -1,0 +1,13 @@
+{
+    "name": "ConfigModule",
+    "alias": "configmodule",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ConfigModule\\Providers\\ConfigModuleServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}
