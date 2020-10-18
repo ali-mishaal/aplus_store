@@ -92,6 +92,13 @@ const editRecord =(props)=>
           })
           .then(function (response) {
              toast.success("Successfully Deleted !")
+             axios.get("http://127.0.0.1:8000/api/configCategory")
+              .then(function(response) {
+                setData(response.data.data);
+              
+              }).catch(function(error) {
+                toast.error("Config Categories does't exists!")
+              })
           })
           .catch(function (error) {
             toast.error("delete failed !")
