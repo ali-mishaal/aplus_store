@@ -4,6 +4,10 @@ import Default from '../components/dashboard/default'
 //CategoryConfig
 import EditCategoryConfig from '../components/categoryConfig/edit'
 import CategoryConfig from '../components/categoryConfig'
+import Config from '../components/Config'
+import Category from '../components/Category'
+import Government from '../components/Government'
+import City from '../components/City'
 
 
 // Forms
@@ -34,6 +38,12 @@ export const routes = [
         { path:"/dashboard/default", Component:Default},
 
         { path:"/setting/category-config", Component:CategoryConfig},
+        { path:"/setting/config", Component:Config},
+
+        { path:"/products/category", Component:Category},
+
+        { path:"/area/country", Component:Government},
+        { path:"/area/city", Component:City},
 
         { path:"/forms/form-validation", Component:FormValidation},
         { path:"/forms/baseInput", Component:BaseInput},

@@ -9,7 +9,7 @@ import EditCategoryConfig from './edit'
 import axios from 'axios'
 
 
-const Category = () =>  {
+const Government = () =>  {
    
   const [selectedRows, setSelectedRows] = useState([]);
   const [toggleCleared, setToggleCleared] = useState(false);
@@ -105,7 +105,7 @@ const editRecord =(props)=>
 
     return (
         <Fragment>
-        <Breadcrumb parent="Setting" title="Catgeory"/>
+        <Breadcrumb parent="Setting" title="Country"/>
         <Container fluid={true}>
                 <Row>
                     
@@ -137,4 +137,4 @@ const editRecord =(props)=>
 
 };
 
-export default Category;
+export default Government;

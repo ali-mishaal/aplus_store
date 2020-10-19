@@ -4,31 +4,28 @@ export const MENUITEMS = [
         menutitle:"General",
         menucontent:"Dashboards,Widgets",
         Items:[
-            {
-                title: 'Dashboard', icon: Home, type: 'sub',badge: "badge badge-success",badgetxt:"2", active: false, children: [
-                    { path: `${process.env.PUBLIC_URL}/dashboard/default`, title: 'Default', type: 'link' },
-                    { path: `${process.env.PUBLIC_URL}/dashboard/ecommerce`, title: 'Ecommerce', type: 'link' },
-                ]
-            },
+            
             {
                 title: 'Setting', icon: Box, type: 'sub', active: false, children: [
                     { path: `${process.env.PUBLIC_URL}/setting/category-config`, title: 'CategoryConfig', type: 'link' },
-                    { path: `${process.env.PUBLIC_URL}/widgets/chart`, title: 'Chart', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/setting/config`, title: 'Config', type: 'link' },
                 ]
             },
-            {
-                title: 'Widgets', icon: Airplay, type: 'sub', active: false, children: [
-                    { path: `${process.env.PUBLIC_URL}/widgets/general`, title: 'General', type: 'link' },
-                    { path: `${process.env.PUBLIC_URL}/widgets/chart`, title: 'Chart', type: 'link' },
-                ]
-            },
+            // {
+            //     title: 'Widgets', icon: Airplay, type: 'sub', active: false, children: [
+            //         { path: `${process.env.PUBLIC_URL}/widgets/general`, title: 'General', type: 'link' },
+            //         { path: `${process.env.PUBLIC_URL}/widgets/chart`, title: 'Chart', type: 'link' },
+            //     ]
+            // },
         ]
     },
 
     {
-        menutitle:"Applications",
-        menucontent:"Ready to use Apps",
+        menutitle:"Area",
+        menucontent:"Ready to use Area",
         Items:[
+            { path: `${process.env.PUBLIC_URL}/area/country`,icon:Map, title: 'country', type: 'link' },
+            { path: `${process.env.PUBLIC_URL}/area/city`,icon:Map, title: 'city', type: 'link' },
             {
                 title: 'Project',icon:Box, type: 'sub',badge: "badge badge-danger",badgetxt:"New",active:false, children: [
                     { path: `${process.env.PUBLIC_URL}/app/project/project-list`, type: 'link', title: 'Project List' },
