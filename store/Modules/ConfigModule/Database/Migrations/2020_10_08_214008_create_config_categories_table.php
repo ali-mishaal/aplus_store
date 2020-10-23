@@ -40,7 +40,8 @@ class CreateConfigCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('config_categories');
         Schema::dropIfExists('config_categories_translations');
+        Schema::dropIfExists('config_categories');
+        
     }
 }

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\AreaModule\Repository\CountryRepository;
-
+use Modules\AreaModule\Entities\Country;
 class CountryController extends Controller
 {
     use CountryRepository;
@@ -20,69 +20,36 @@ class CountryController extends Controller
         return $countries;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
-    {
-        return view('areamodule::create');
-    }
+  
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
     public function store(Request $request)
     {
-        $request->validate([
-            'ar:name'=>'required',
-            'en:name'=>'required'
+        $data=$request->validate([
+            'name:ar'=>'required',
+            'name:en'=>'required'
         ]);
 
-        $country = $this->storeCountry($request->except('_token'));
+        $country = $this->storeCountry($data);
         return $country;
     }
 
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
+    
     public function show($id)
     {
         return view('areamodule::show');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('areamodule::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
+   
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
+    public function destroy(Request $request , $id)
     {
-        //
+        $data = json_decode($request->data,true);
+        $data = collect($data)->pluck('id');
+        Country::whereIn('id',$data)->delete();
+        return true;
     }
 }

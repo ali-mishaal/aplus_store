@@ -13,5 +13,5 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::resource('country','CountryController');
-Route::resource('city','CityController');
+Route::resource('/country','CountryController');
+Route::resource('/city','CityController');

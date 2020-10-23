@@ -38,11 +38,10 @@ class ConfigCategoryController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(ConfigCategoryRequest $request, $id)
     {
-        return $request->all();
-        $item = ConfigCategory::find($id);
-        $item->update($request->except('_method'));
+        $updateConfigCategory = $this->UpdateConfigCategory($request->except('_method'),$id);
+        return $updateConfigCategory;
     }
 
    

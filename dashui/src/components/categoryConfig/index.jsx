@@ -8,103 +8,116 @@ import { Container,Row,Col,Card,CardHeader,CardBody} from 'reactstrap';
 import EditCategoryConfig from './edit' 
 import axios from 'axios'
 
+class Category extends React.Component
+{
+    constructor()
+    {
+      super()
+      this.state=
+      {
+        selectedRows:'',
+        toggleCleared:false,
+        category:'',
+        data:''
+      }
 
-const Category = () =>  {
-   
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [toggleCleared, setToggleCleared] = useState(false);
-  const [category, setCategory] = useState([]);
-
-  const [data, setData] = useState({});
-  const [isUpdate , setIsUpdate] =useState(false);
-  
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/configCategory")
-      .then(function(response) {
-        setData(response.data.data);
       
+    }
+
+    componentDidMount()
+    {
+       this.get()
+    }
+
+  
+    async get()
+    {
+      let data = await axios.get("http://127.0.0.1:8000/api/configCategory")
+      .then(function(response) {
+        return response.data.data
       }).catch(function(error) {
         toast.error("Config Categories does't exists!")
       })
-  }, []);
-
-  
-const editRecord =(props)=>
-{
-  axios.get("http://127.0.0.1:8000/api/configCategory/"+props.id)
-  .then(function(response) {
-    setCategory(response.data.date)
-  }).catch(function(error) {
-    toast.error("please try again!")
-  })
-  
-}
- const tableColumns = [
-    {
-        name: 'ID',
-        selector: 'id', 
-        sortable: true,
-        center:true,
-    },
-    {
-        name: 'title',
-        selector: 'title',
-        sortable: true,
-        center:true,
-    },  {
-        name: "action",
-        text: "Action",
-        className: "action",
-        width: 100,
-        align: "left",
-        sortable: false,
-        cell: record => { 
-            return (
-                <Fragment>
-                    <button
-                        className="btn btn-primary btn-sm"
-                        onClick={() => editRecord(record)}
-                        style={{marginRight: '5px'}}>
-                        <i className="fa fa-edit"></i>
-                    </button>
-                </Fragment>
-            );
-        }
+      this.setState({data: data});
     }
-   
-   
-  ]
 
+    async editRecord(item)
+    {
+      let data = await axios.get("http://127.0.0.1:8000/api/configCategory/"+item.id)
+      .then(function(response) {
+        return response.data.data
+      }).catch(function(error) {
+        toast.error("Config Categories does't exists!")
+      })
+      const category={titlear:data.titlear,titleen:data.titleen,id:item.id}
+      this.setState({category: category })
+    }
 
+    tableColumns = [
+      {
+          name: 'ID',
+          selector: 'id', 
+          sortable: true,
+          center:true,
+      },
+      {
+          name: 'title',
+          selector: 'title',
+          sortable: true,
+          center:true,
+      },  {
+          name: "action",
+          text: "Action",
+          className: "action",
+          width: 100,
+          align: "left",
+          sortable: false,
+          cell: record => { 
+              return (
+                  <Fragment>
+                      <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => this.editRecord(record)}
+                          style={{marginRight: '5px'}}>
+                          <i className="fa fa-edit"></i>
+                      </button>
+                  </Fragment>
+              );
+          }
+      }
+     
+     
+    ]
 
-  const handleRowSelected = useCallback(state => {
-      setSelectedRows(state.selectedRows);
-    }, []);
+    handleRowSelected= state => {
+      this.setState({ selectedRows: state.selectedRows });
+    }
 
-    const contextActions = useMemo(() => {
-      const handleDelete = () => {
-        
-        if (window.confirm(`Are you sure you want to delete:\r ${selectedRows.map(r => r.title)}?`)) {
-          setToggleCleared(!toggleCleared);
-          axios.post('http://127.0.0.1:8000/api/configCategory/1', {
-            data: JSON.stringify(selectedRows),
-            _method: 'DELETE'
-          })
-          .then(function (response) {
-             toast.success("Successfully Deleted !")
-          })
-          .catch(function (error) {
-            toast.error("delete failed !")
-          });
-         
-        }
-      };
   
-      return <button key="delete" className="btn btn-danger" onClick={handleDelete}>Delete</button>;
-    }, [data, selectedRows, toggleCleared]);
 
-    return (
-        <Fragment>
+   handleDelete = () => {
+                                    
+    if (window.confirm(`Are you sure you want to delete:\r ${this.state.selectedRows.map(r => r.title)}?`)) {
+      this.setState({ toggleCleared: !this.state.toggleCleared });
+      let deleteCategory = axios.post('http://127.0.0.1:8000/api/configCategory/1', {
+        data: JSON.stringify(this.state.selectedRows),
+        _method: 'DELETE'
+      })
+      .then(function (response) {
+         return toast.success("Successfully Deleted !")
+      })
+      .catch(function (error) {
+        toast.error("delete failed !")
+      });
+      this.setState({data: differenceBy(this.state.data, this.state.selectedRows, 'title')});
+    }
+  };
+    
+ 
+  render()
+  {
+    return(
+      <Fragment>
         <Breadcrumb parent="Setting" title="Catgeory"/>
         <Container fluid={true}>
                 <Row>
@@ -112,19 +125,19 @@ const editRecord =(props)=>
                     <Col sm="12">
                         <Card>
                             <CardHeader>
-                                <EditCategoryConfig  category={category}/>
+                                <EditCategoryConfig  category={this.state.category}/>
                             </CardHeader>
                             <CardBody>
                               <DataTable
-                                data={data}
-                                columns={tableColumns}
+                                data={this.state.data}
+                                columns={this.tableColumns}
                                 striped={true}
                                 center={true}
                                 selectableRows
                                 persistTableHead
-                                contextActions={contextActions}
-                                onSelectedRowsChange={handleRowSelected}
-                                clearSelectedRows={toggleCleared}
+                                contextActions= {<button key="delete" className="btn btn-danger" onClick={this.handleDelete}>Delete</button>}
+                                onSelectedRowsChange={this.handleRowSelected}
+                                clearSelectedRows={this.state.toggleCleared}
                               />
                             
                             </CardBody>
@@ -134,7 +147,9 @@ const editRecord =(props)=>
             </Container>
         </Fragment>
     );
+  }
+ 
+}
 
-};
 
 export default Category;

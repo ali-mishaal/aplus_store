@@ -34,6 +34,10 @@ import SizingTable from '../components/tables/sizingTable'
 import StylingTable from '../components/tables/stylingTable'
 import DataTable from '../components/tables/dataTable'
 
+import Dropdown from '../components/ui-kits/dropDown'
+import TabBootstrap from '../components/ui-kits/tabs/tabBootstrap'
+import TabLine from '../components/ui-kits/tabs/tabLine'
+
 export const routes = [
         { path:"/dashboard/default", Component:Default},
 
@@ -62,5 +66,9 @@ export const routes = [
         { path:"/table/sizing", Component:SizingTable},
         { path:"/table/styling", Component:StylingTable},
         { path:"/table/datatable", Component:DataTable},
+
+        { path:"/ui-kits/dropdown", Component:Dropdown},
+        { path:"/ui-kits/tab-bootstrap", Component:TabBootstrap},
+        { path:"/ui-kits/tab-line", Component:TabLine},
     
 ]

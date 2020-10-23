@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 
 
 Route::resource('/configCategory','ConfigCategoryController');
+Route::resource('/config','ConfigModuleController');
+
 Route::middleware('auth:api')->get('/configmodule', function (Request $request) {
     return $request->user();
 });

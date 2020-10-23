@@ -1,106 +1,134 @@
-import React, { useState ,useEffect, Fragment,componentDidUpdate } from 'react';
+import React,{useEffect,useState,Fragment} from 'react';
 import Breadcrumb from '../../layout/breadcrumb'
 import {useForm} from 'react-hook-form'
-import {Container,Row,Col,Card,CardHeader,CardBody,Button,Form,FormGroup,Label,Input,InputGroup,InputGroupAddon,InputGroupText} from 'reactstrap'
+import {Container,Row,Col,Card,CardHeader,CardBody,Nav,NavItem,NavLink,TabContent,TabPane,Button,Form,FormGroup,Label,Input,InputGroup,InputGroupAddon,InputGroupText} from 'reactstrap'
 import axios from 'axios'
 import { toast } from 'react-toastify';
-import { Category } from 'emoji-mart';
 
-const EditCategoryConfig = (props) => 
+
+
+class TabLine extends React.Component
+{
+  constructor()
     {
-    const { register, handleSubmit, errors } = useForm();
-    const [isUpdate , setIsUpdate] =useState(false);
-    const [titlear , setTitlear] =useState();
+      super()
+      this.state=
+      {
+        inputValues:'',
+        formData:'',
+        category:'',
+        data:''
+      }
 
-    const categoryForm = 
-    {     
-        form: { titlear: '',titleen:'',isEdit:false },
-        btnName: 'save',
-        btnColor:'primary'
+      
     }
-  
-    const isEmpty=(obj)=>
+    componentDidMount()
     {
-      return Object.entries(obj).length === 0 & obj.constructor === Object;
+        this.getConfigCategory()
+        this.getConfigs() 
+        // var arr = [];
+        // this.props.category.map(function(name, keyIndex){
+        //   console.log('mn')
+        //   arr.push(name);
+        // })
+
+        // this.setState({formData: arr});
+        console.log(this.state.category)
+ 
+
     }
+     
+
+    async getConfigCategory()
+    {
+      let data = await axios.get("http://127.0.0.1:8000/api/configCategory")
+      .then(function(response) {
+        return response.data.data;
+      }).catch(function(error) {
+        toast.error("Config Categories does't exists!")
+      })
+      this.setState({category: data})
+      
+    }
+
+    async getConfigs()
+    {
+      let data = await axios.get("http://127.0.0.1:8000/api/config")
+      .then(function(response) {
+        return response.data.data;
+      }).catch(function(error) {
+        toast.error("Config Categories does't exists!")
+      })
+      console.log(data)
+    }
+
+    handleChange=event=>
+    {
+      const{name,value} = event.target;
+      let form = this.state.form;
+      form[name] = value
+      this.setState({form})
+    }
+
+    onSubmit = () => {
+      let dataForm = document.getElementById('create')
+      let formData = new FormData(dataForm);
+      let urlApi = "http://127.0.0.1:8000/api/configCategory/"+this.state.form.id 
+      let config = 
+      {     
+          headers: { 'content-type': 'multipart/form-data' }
+      }
+    
+      if(Object.entries(this.props.category).length >0)
+      {
+        formData.append('_method', 'PUT')
+      }
+  
+        axios.post(urlApi, 
+                   formData,config)
+            .then(function (response) {
+               toast.success(response.data.message)
+               window.location.reload(false)
+            })
+            .catch(function (error) {
+              toast.error("created failed !")
+            });
+       
+    };
 
   
 
-    useEffect(() => {
-      if( !isEmpty(props))
-        console.log('update!');
-    }, [props]);
-
-  const config = 
-  {     
-      headers: { 'content-type': 'multipart/form-data' }
+    render()
+  {
+    return(
+      <Fragment>
+       
+        <Container fluid={true}>
+            <Row>
+             <Col  sm="12" xl="6 xl-100">
+                <Card>
+               
+                  <CardBody>
+                    <Row>
+                      <Col sm="3"className="tabs-responsive-side">
+                      <Nav className="flex-column nav-pills border-tab nav-left" >
+                   
+                    </Nav>
+                    </Col>
+                    <Col sm="9">
+                    
+                    </Col>
+                    </Row>
+                </CardBody>
+                </Card>
+                 </Col>
+           </Row>
+          </Container>
+          </Fragment>
+    )
   }
 
-  const onSubmit = data => {
-    let dataForm = document.getElementById('create')
-    let formData = new FormData(dataForm);
-    let urlApi = "http://127.0.0.1:8000/api/configCategory/"
-    // if(isUpdate)
-    // {
-    //   formData.append('<input type="hidden" name="_method" value="PUT"')
-    // }
+}
+ 
 
-    if (data !== '') {
-      axios.post(urlApi, 
-                 formData,config)
-          .then(function (response) {
-            console.log(response)
-            
-            setIsUpdate(false)
-             toast.success("Successfully Created !")
-          })
-          .catch(function (error) {
-            console.log(error)
-            toast.error("created failed !")
-          });
-     
-    } else {
-      errors.showMessages();
-    }
-  };
-
-  return (
-    <Fragment>
-      
-      <Container fluid={true}>
-        <Row>
-          <Col sm="12">
-            
-                <Form id="create" className="needs-validation" noValidate="" onSubmit={handleSubmit(onSubmit)}>
-                  
-                  <div className="form-row">
-                    <Col md="5 mb-3">
-                      
-                      <Input className="form-control" name="title:ar" type="text" value={titlear}   placeholder="Arabic Title" innerRef={register({ required: true })} />
-                      <span>{errors.title && 'Arabic Title is required'}</span>
-                      <div className="valid-feedback">Looks good!</div>
-                    </Col>
-                    <Col md="5 mb-3">
-                    
-                      <Input  className="form-control" name="title:en" type="text" value="fsd" placeholder="English Title" innerRef={register({ required: true })} />
-                      <span>{errors.title && 'English Title is required'}</span>
-                      <div className="valid-feedback">Looks good!</div>
-                    </Col>
-
-                    <Col md="2 mb-3">
-                        <Button  color={categoryForm.btnColor}>{categoryForm.btnName}</Button>
-                    </Col>
-
-                  </div>
-                 
-                 
-                </Form>
-             
-          </Col>
-        </Row>
-      </Container>
-    </Fragment>
-  );
-};
-
-export default  EditCategoryConfig ;
+export default TabLine;

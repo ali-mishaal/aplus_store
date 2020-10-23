@@ -19,19 +19,19 @@ const Government = () =>  {
   const [isUpdate , setIsUpdate] =useState(false);
   
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/configCategory")
+    axios.get("http://127.0.0.1:8000/api/country")
       .then(function(response) {
         setData(response.data.data);
       
       }).catch(function(error) {
-        toast.error("Config Categories does't exists!")
+        toast.error("country does't exists!")
       })
   }, []);
 
   
 const editRecord =(props)=>
 {
-  axios.get("http://127.0.0.1:8000/api/configCategory/"+props.id)
+  axios.get("http://127.0.0.1:8000/api/country/"+props.id)
   .then(function(response) {
     setCategory(response.data.date)
   }).catch(function(error) {
@@ -48,7 +48,7 @@ const editRecord =(props)=>
     },
     {
         name: 'title',
-        selector: 'title',
+        selector: 'name',
         sortable: true,
         center:true,
     },  {
@@ -84,14 +84,15 @@ const editRecord =(props)=>
     const contextActions = useMemo(() => {
       const handleDelete = () => {
         
-        if (window.confirm(`Are you sure you want to delete:\r ${selectedRows.map(r => r.title)}?`)) {
+        if (window.confirm(`Are you sure you want to delete:\r ${selectedRows.map(r => r.name)}?`)) {
           setToggleCleared(!toggleCleared);
-          axios.post('http://127.0.0.1:8000/api/configCategory/1', {
+          axios.post('http://127.0.0.1:8000/api/country/1', {
             data: JSON.stringify(selectedRows),
             _method: 'DELETE'
           })
           .then(function (response) {
              toast.success("Successfully Deleted !")
+             setData(differenceBy(data, selectedRows, 'name'));
           })
           .catch(function (error) {
             toast.error("delete failed !")
@@ -105,7 +106,7 @@ const editRecord =(props)=>
 
     return (
         <Fragment>
-        <Breadcrumb parent="Setting" title="Country"/>
+        <Breadcrumb parent="Area" title="Country"/>
         <Container fluid={true}>
                 <Row>
                     

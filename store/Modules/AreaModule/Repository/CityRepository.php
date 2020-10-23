@@ -1,14 +1,14 @@
 <?php
 namespace Modules\AreaModule\Repository;
 
-use Modules\AreaModule\Entities\Country;
+use Modules\AreaModule\Entities\City;
 use Modules\AreaModule\Transformers\CountryResource;
 
-trait CountryRepository
+trait CityRepository
 {
-    function getCountries()
+    function getCity()
     {
-        $countries =  Country::all();
+        $countries =  City::all();
         if($countries)
         {
             $data = CountryResource::collection($countries);
@@ -23,7 +23,7 @@ trait CountryRepository
 
     function findCountry($id)
     {
-        $country = Country::find($id);
+        $country = City::find($id);
         if($country)
         {
             $data = CountryResource::make($country);
@@ -34,9 +34,9 @@ trait CountryRepository
         }
     }
 
-    function storeCountry($data)
+    function storeCity($data)
     {
-        $country = Country::create($data);
+        $country = City::create($data);
         if($country)
       {
          $responseSuccess = \ResponseHelper::getInstance()

@@ -18,8 +18,8 @@ class ConfigCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            'title:en' => 'required|string',
-            'title:ar' => 'required|string'
+            'titlear' => 'required|string',
+            'titleen' => 'required|string'
         ];
     }
 

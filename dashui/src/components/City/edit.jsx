@@ -11,6 +11,7 @@ const EditCategoryConfig = (props) =>
     const { register, handleSubmit, errors } = useForm();
     const [isUpdate , setIsUpdate] =useState(false);
     const [titlear , setTitlear] =useState();
+    
 
     const categoryForm = 
     {     
@@ -27,6 +28,7 @@ const EditCategoryConfig = (props) =>
   
 
     useEffect(() => {
+      
       if( !isEmpty(props))
         console.log('update!');
     }, [props]);
@@ -39,7 +41,7 @@ const EditCategoryConfig = (props) =>
   const onSubmit = data => {
     let dataForm = document.getElementById('create')
     let formData = new FormData(dataForm);
-    let urlApi = "http://127.0.0.1:8000/api/configCategory/"
+    let urlApi = "http://127.0.0.1:8000/api/city/"
     // if(isUpdate)
     // {
     //   formData.append('<input type="hidden" name="_method" value="PUT"')
@@ -50,7 +52,7 @@ const EditCategoryConfig = (props) =>
                  formData,config)
           .then(function (response) {
             console.log(response)
-            
+            window.location.reload(false)
             setIsUpdate(false)
              toast.success("Successfully Created !")
           })
@@ -74,15 +76,29 @@ const EditCategoryConfig = (props) =>
                 <Form id="create" className="needs-validation" noValidate="" onSubmit={handleSubmit(onSubmit)}>
                   
                   <div className="form-row">
-                    <Col md="5 mb-3">
-                      
-                      <Input className="form-control" name="title:ar" type="text" value={titlear}   placeholder="Arabic Title" innerRef={register({ required: true })} />
+                  <Col md="3 mb-3">
+                    
+                      <select className="form-control" name="country_id" type="text"  placeholder="choose country" innerRef={register({ required: true })} >
+                      {Object.keys(props.countries).map(function(name, keyIndex) {
+                              return (
+                              <option value={props.countries[name].id}>{props.countries[name].name}</option>
+                                
+                              )
+                          })}
+                      </select>
                       <span>{errors.title && 'Arabic Title is required'}</span>
                       <div className="valid-feedback">Looks good!</div>
                     </Col>
-                    <Col md="5 mb-3">
+
+                    <Col md="3 mb-3">
+                      
+                      <Input className="form-control" name="name:ar" type="text" value={titlear}   placeholder="Arabic Title" innerRef={register({ required: true })} />
+                      <span>{errors.title && 'Arabic Title is required'}</span>
+                      <div className="valid-feedback">Looks good!</div>
+                    </Col>
+                    <Col md="3 mb-3">
                     
-                      <Input  className="form-control" name="title:en" type="text" value="fsd" placeholder="English Title" innerRef={register({ required: true })} />
+                      <Input  className="form-control" name="name:en" type="text"  placeholder="English Title" innerRef={register({ required: true })} />
                       <span>{errors.title && 'English Title is required'}</span>
                       <div className="valid-feedback">Looks good!</div>
                     </Col>
