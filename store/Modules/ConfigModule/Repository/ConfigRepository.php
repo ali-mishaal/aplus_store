@@ -82,16 +82,16 @@ trait ConfigRepository
 
    public function UpdateConfig($data)
    {
+      
         $data = $data->except('_method');
-        
-        foreach($data as $key)
+        foreach($data as $key=>$value)
         {
             $getConfig = Config::where('key',$key)->first();
             $dataUpdated=[];
-            $dataUpdated['name:en'] = $getConfig->type == 1?$data[$key]:$data[$key[0]][0];
-            $dataUpdated['name:ar'] = $getConfig->type == 1?$data[$key]:$data[$key[0]][1];
-            $dataUpdated['description:en'] = $getConfig->type == 3?$data[$key[0]][2]:'';
-            $dataUpdated['description:ar'] = $getConfig->type == 3?$data[$key[0]][2]:'';
+            $dataUpdated['name:en'] = $value;
+            $dataUpdated['name:ar'] = $value;
+            // $dataUpdated['description:en'] = $getConfig->type == 3?$data[$key[0]][2]:'';
+            // $dataUpdated['description:ar'] = $getConfig->type == 3?$data[$key[0]][2]:'';
             $getConfig->update($dataUpdated);  
           
         }

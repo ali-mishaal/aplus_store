@@ -11,4 +11,9 @@ class City extends Model
     protected $fillable = ['country_id'];
     public $translatedAttributes = ['name'];
     public $translationModel = CityTranslation::class;
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class,'country_id');
+    }
 }

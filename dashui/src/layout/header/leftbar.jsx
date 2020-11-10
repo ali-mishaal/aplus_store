@@ -119,8 +119,9 @@ const Leftbar = (props) => {
         <div className="logo-wrapper">
         
             <Link to={`${process.env.PUBLIC_URL}/dashboard/default`}>
-              <img className="img-fluid for-light" src={require("../../assets/images/logo/logo.png")} alt="" />
-              <img className="img-fluid for-dark" src={require("../../assets/images/logo/logo_dark.png")} alt="" />
+              {/* <img className="img-fluid for-light" src={require("../../assets/images/logo/logo.png")} alt="" />
+              <img className="img-fluid for-dark" src={require("../../assets/images/logo/logo_dark.png")} alt="" /> */}
+              <h1>Al Habbal</h1>
             </Link>
           
         </div>

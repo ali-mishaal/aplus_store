@@ -2,16 +2,16 @@
 namespace Modules\AreaModule\Repository;
 
 use Modules\AreaModule\Entities\City;
-use Modules\AreaModule\Transformers\CountryResource;
+use Modules\AreaModule\Transformers\CityResource;
 
 trait CityRepository
 {
     function getCity()
     {
-        $countries =  City::all();
-        if($countries)
+        $cities =  City::with('country')->get();
+        if($cities)
         {
-            $data = CountryResource::collection($countries);
+            $data = CityResource::collection($cities);
             $responseSuccess = \ResponseHelper::getInstance()
             ->setData($data)
             ->response();
@@ -34,8 +34,11 @@ trait CityRepository
         }
     }
 
-    function storeCity($data)
+    function storeCity($request)
     {
+        $data['ar']['name'] = $request['namear'];
+        $data['en']['name'] = $request['nameen'];
+        $data['country_id'] = $request['country'];
         $country = City::create($data);
         if($country)
       {
@@ -48,17 +51,21 @@ trait CityRepository
       throw new BadRequestException();
     }
 
-    function updateCountry($id,$data)
+    function updateCity($request,$id)
     {
-        $country = Country::where('id',$id)->update($data);
-        if($country)
+        $item = City::find($id);
+        $data['ar']['name'] = $request['namear'];
+        $data['en']['name'] = $request['nameen'];
+        $data['country_id'] = $request['country'];
+        $updateCity = $item->update($data);
+        if($updateCity)
         {
-            $responseSuccess = \ResponseHelper::getInstance()
-            ->setMessage('updated successfully')
-            ->response();
-            return $responseSuccess;
+           $responseSuccess = \ResponseHelper::getInstance()
+           ->setMessage('updated successfully')
+           ->response();
+           return $responseSuccess;  
         }
-
+   
         throw new BadRequestException();
     }
 

@@ -2,5 +2,7 @@
     "CommonModule": true,
     "ConfigModule": true,
     "UiModule": true,
-    "AreaModule": true
+    "AreaModule": true,
+    "AdminModule": true,
+    "ProductModule": true
 }

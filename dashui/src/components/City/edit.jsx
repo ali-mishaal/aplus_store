@@ -6,105 +6,166 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 import { Category } from 'emoji-mart';
 
-const EditCategoryConfig = (props) => 
+class EditCity extends React.Component
+{
+  constructor()
+  {
+    super()
+    this.state=
     {
-    const { register, handleSubmit, errors } = useForm();
-    const [isUpdate , setIsUpdate] =useState(false);
-    const [titlear , setTitlear] =useState();
+      form:{namear:"",nameen:"",country:"",id:"",isedit:false},
+      btnname:'save',
+      btncolor:'primary',
+      isUpdate:false,
+      category:'',
+      data:'',
+      categoryForm:''
+    }
+
+    this.form=
+    {
+      register:'',
+      handleSubmit:'',
+      errors:''
+    }
     
-
-    const categoryForm = 
-    {     
-        form: { titlear: '',titleen:'',isEdit:false },
-        btnName: 'save',
-        btnColor:'primary'
-    }
-  
-    const isEmpty=(obj)=>
-    {
-      return Object.entries(obj).length === 0 & obj.constructor === Object;
-    }
-
-  
-
-    useEffect(() => {
-      
-      if( !isEmpty(props))
-        console.log('update!');
-    }, [props]);
-
-  const config = 
-  {     
-      headers: { 'content-type': 'multipart/form-data' }
   }
 
-  const onSubmit = data => {
+  isEmpty(obj)
+  {
+    return Object.entries(obj).length ===0 && obj.constructor===Object;
+  }
+  componentDidUpdate(prevProps)
+  {
+ 
+    if(prevProps !== this.props && this.props.category.constructor===Object && Object.entries(this.props.category).length >0)
+    {
+      
+        this.setState({
+          form: {...this.props.category,isedit:true},
+          btnname:'update',
+          btncolor:'danger',
+
+        })
+    }
+  }
+  
+  handleChange=event=>
+  {
+    const{name,value} = event.target;
+    let form = this.state.form;
+    form[name] = value
+    this.setState({form})
+  }
+ 
+
+    onSubmit = () => {
     let dataForm = document.getElementById('create')
     let formData = new FormData(dataForm);
-    let urlApi = "http://127.0.0.1:8000/api/city/"
-    // if(isUpdate)
-    // {
-    //   formData.append('<input type="hidden" name="_method" value="PUT"')
-    // }
+    let urlApi = "https://aplus-code.com/alhabbal/store/api/city/"+this.state.form.id 
+    let config = 
+    {     
+        headers: { 'content-type': 'multipart/form-data' }
+    }
+  
+    if(Object.entries(this.props.category).length >0)
+    {
+      formData.append('_method', 'PUT')
+    }
 
-    if (data !== '') {
-      axios.post(urlApi, 
+        axios.post(urlApi, 
                  formData,config)
           .then(function (response) {
-            console.log(response)
-            window.location.reload(false)
-            setIsUpdate(false)
-             toast.success("Successfully Created !")
-          })
-          .catch(function (error) {
-            console.log(error)
-            toast.error("created failed !")
+             toast.success(response.data.message)
+          }).catch(function (error) {
+            toast.error('error')
           });
-     
-    } else {
-      errors.showMessages();
-    }
+
+          setTimeout(
+              function() {
+                this.get()
+                this.props.changeCategory()
+                this.setState({
+                  form: {namear:"",nameen:"",id:"",isedit:false},
+                  btnname:'create',
+                  btncolor:'primary',
+        
+                })
+              }
+              .bind(this),
+              3000
+          );
+         
   };
 
-  return (
-    <Fragment>
+  async get()
+  {
+    let data = await axios.get("https://aplus-code.com/alhabbal/store/api/city")
+    .then(function(response) {
+      return response.data.data
+    }).catch(function(error) {
+      // toast.error("Config Categories does't exists!")
+      console.log(error)
+    })
+    this.props.setName(data);
+  }
+
+  render()
+  {
+    if (!this.props.countries ) {
+      return <div>please wait ...</div>;
+    }
+
+    return(
+      <Fragment>
       
       <Container fluid={true}>
         <Row>
           <Col sm="12">
             
-                <Form id="create" className="needs-validation" noValidate="" onSubmit={handleSubmit(onSubmit)}>
+                <Form id="create" className="needs-validation" noValidate="" >
                   
                   <div className="form-row">
+
                   <Col md="3 mb-3">
-                    
-                      <select className="form-control" name="country_id" type="text"  placeholder="choose country" innerRef={register({ required: true })} >
-                      {Object.keys(props.countries).map(function(name, keyIndex) {
-                              return (
-                              <option value={props.countries[name].id}>{props.countries[name].name}</option>
-                                
-                              )
-                          })}
-                      </select>
-                      <span>{errors.title && 'Arabic Title is required'}</span>
+                      
+                      <select className="form-control" 
+                         name="country" type="text" 
+                         value={this.state.form.country}  
+                         onChange={this.handleChange} placeholder="Arabic Title"  >
+                          {this.props.countries.map((data, i)=>(
+                            <option value={data.id}>{data.name}</option>
+                          ))
+                          }
+                           </select>
+                      <span>{this.form.errors.country_id && 'country is required'}</span>
                       <div className="valid-feedback">Looks good!</div>
                     </Col>
 
                     <Col md="3 mb-3">
                       
-                      <Input className="form-control" name="name:ar" type="text" value={titlear}   placeholder="Arabic Title" innerRef={register({ required: true })} />
-                      <span>{errors.title && 'Arabic Title is required'}</span>
+                      <Input className="form-control" 
+                         name="namear" type="text" 
+                         value={this.state.form.namear}  
+                         onChange={this.handleChange} placeholder="Arabic Title"  />
+                      <span>{this.form.errors.title && 'Arabic Title is required'}</span>
                       <div className="valid-feedback">Looks good!</div>
                     </Col>
                     <Col md="3 mb-3">
                     
-                      <Input  className="form-control" name="name:en" type="text"  placeholder="English Title" innerRef={register({ required: true })} />
-                      <span>{errors.title && 'English Title is required'}</span>
+                      <Input  className="form-control" 
+                      name="nameen" type="text"  
+                      value={this.state.form.nameen} 
+                      onChange={this.handleChange} placeholder="English Title"  />
+                      <span>{this.form.errors.nameen && 'English Title is required'}</span>
                       <div className="valid-feedback">Looks good!</div>
                     </Col>
 
                     <Col md="2 mb-3">
-                        <Button  color={categoryForm.btnColor}>{categoryForm.btnName}</Button>
+                        <Button  color={this.state.btncolor}
+                                 onClick={this.onSubmit}>
+                          {this.state.btnname}
+                          </Button>
                     </Col>
 
                   </div>
@@ -116,7 +177,11 @@ const EditCategoryConfig = (props) =>
         </Row>
       </Container>
     </Fragment>
-  );
-};
+    );
+  }
 
-export default  EditCategoryConfig ;
+
+}
+
+
+export default  EditCity ;

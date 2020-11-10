@@ -25,9 +25,10 @@ setLanguageCookie();
 
 const Rightbar = (props) => {
 
+  const user =()=> localStorage.getItem('user')||null
   const history = useHistory();
   const [profile, setProfile] = useState('');
-  const [name, setName] = useState('')
+  const [name, setName] = useState(user)
   const [searchresponsive, setSearchresponsive] = useState(false)
   const [langdropdown, setLangdropdown] = useState(false)
   const [moonlight, setMoonlight] = useState(false)
@@ -40,7 +41,6 @@ const Rightbar = (props) => {
 
   useEffect(() => {
     setProfile(localStorage.getItem('profileURL' || man));
-    setName(localStorage.getItem('Name'))
     if(localStorage.getItem("layout_version") === "dark-only"){
       setMoonlight(true)
     }
@@ -141,7 +141,7 @@ const Rightbar = (props) => {
             </div>
           </li>
           <li><span className="header-search"><Search onClick={() => SeacrhResposive(searchresponsive)} /></span></li>
-          <li className="onhover-dropdown">
+        {/* <li className="onhover-dropdown">
             <div className="notification-box"><Bell /><span className="badge badge-pill badge-secondary">2</span></div>
             <ul className="notification-dropdown onhover-show-div">
               <li className="bg-primary">
@@ -163,11 +163,11 @@ const Rightbar = (props) => {
               <li><button className="btn btn-primary">Check all notification</button>
               </li>
             </ul>
-          </li>
+          </li>  */}
           <li>
             <div className="mode" onClick={() => MoonlightToggle(moonlight)}><i className={`fa ${moonlight ? 'fa-lightbulb-o' : 'fa-moon-o'}`}></i></div>
           </li>
-          <li className="cart-nav onhover-dropdown">
+          {/* <li className="cart-nav onhover-dropdown">
             <div className="cart-box"><ShoppingCart /><span className="badge badge-pill badge-primary">2</span></div>
             <ul className="cart-dropdown chat-dropdown onhover-show-div">
               <li className="bg-primary text-center">
@@ -182,8 +182,8 @@ const Rightbar = (props) => {
                   </div>
                   <div className="close-circle"><a href="#javascript"><X /></a></div>
                 </div>
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <div className="media" onClick={RedirectToCart}><img className="img-fluid rounded-circle mr-3 img-60" src={require("../../assets/images/ecommerce/02.jpg")} alt="" />
                   <div className="media-body"><span>Girls's T-shirt</span>
                     <p>It is a long established fact that a reader</p>
@@ -214,9 +214,9 @@ const Rightbar = (props) => {
                 </div>
               </li>
             </ul>
-          </li>
-          <li className="onhover-dropdown"><MessageSquare />
-            <ul className="chat-dropdown onhover-show-div">
+          </li> */}
+          {/* <li className="onhover-dropdown"><MessageSquare /> */}
+            {/* <ul className="chat-dropdown onhover-show-div">
               <li className="bg-primary text-center">
                 <h6 className="f-18 mb-0">Message Box</h6>
                 <p className="mb-0">You have 3 new messages </p>
@@ -250,13 +250,12 @@ const Rightbar = (props) => {
               </li>
               <li className="text-center"> <button className="btn btn-primary">View All     </button></li>
             </ul>
-          </li>
-          <li className="maximize"><a className="text-dark" href="#javascript" onClick={goFull}><Minimize /></a></li>
+          </li> */}
+          {/* <li className="maximize"><a className="text-dark" href="#javascript" onClick={goFull}><Minimize /></a></li> */}
           <li className="onhover-dropdown p-0">
             <div className="media profile-media">
               <img className="b-r-10" src={profile} alt="" />
               <div className="media-body"><span>{name}</span>
-                <p className="mb-0 font-roboto">Admin <i className="middle fa fa-angle-down"></i></p>
               </div>
             </div>
             <ul className="profile-dropdown onhover-show-div">

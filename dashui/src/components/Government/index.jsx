@@ -5,127 +5,149 @@ import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component'
 import {tableData} from '../../data/dummyTableData'
 import { Container,Row,Col,Card,CardHeader,CardBody} from 'reactstrap';
-import EditCategoryConfig from './edit' 
+import EditGovern from './edit' 
 import axios from 'axios'
 
-
-const Government = () =>  {
-   
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [toggleCleared, setToggleCleared] = useState(false);
-  const [category, setCategory] = useState([]);
-
-  const [data, setData] = useState({});
-  const [isUpdate , setIsUpdate] =useState(false);
-  
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/country")
-      .then(function(response) {
-        setData(response.data.data);
-      
-      }).catch(function(error) {
-        toast.error("country does't exists!")
-      })
-  }, []);
-
-  
-const editRecord =(props)=>
+class Government extends React.Component
 {
-  axios.get("http://127.0.0.1:8000/api/country/"+props.id)
-  .then(function(response) {
-    setCategory(response.data.date)
-  }).catch(function(error) {
-    toast.error("please try again!")
-  })
-  
-}
- const tableColumns = [
+    constructor()
     {
-        name: 'ID',
-        selector: 'id', 
-        sortable: true,
-        center:true,
-    },
-    {
-        name: 'title',
-        selector: 'name',
-        sortable: true,
-        center:true,
-    },  {
-        name: "action",
-        text: "Action",
-        className: "action",
-        width: 100,
-        align: "left",
-        sortable: false,
-        cell: record => { 
-            return (
-                <Fragment>
-                    <button
-                        className="btn btn-primary btn-sm"
-                        onClick={() => editRecord(record)}
-                        style={{marginRight: '5px'}}>
-                        <i className="fa fa-edit"></i>
-                    </button>
-                </Fragment>
-            );
-        }
+      super()
+      this.state=
+      {
+        selectedRows:'',
+        toggleCleared:false,
+        category:'',
+        data:''
+      }
+
+      
     }
-   
-   
-  ]
 
+    setName = (data) => {
+      this.setState({ data: data })
+    }
 
+    changeCategory = () => {
+      this.setState({ category: '' })
+    }
 
-  const handleRowSelected = useCallback(state => {
-      setSelectedRows(state.selectedRows);
-    }, []);
+    componentDidMount()
+    {
+       this.get()
+    }
 
-    const contextActions = useMemo(() => {
-      const handleDelete = () => {
-        
-        if (window.confirm(`Are you sure you want to delete:\r ${selectedRows.map(r => r.name)}?`)) {
-          setToggleCleared(!toggleCleared);
-          axios.post('http://127.0.0.1:8000/api/country/1', {
-            data: JSON.stringify(selectedRows),
-            _method: 'DELETE'
-          })
-          .then(function (response) {
-             toast.success("Successfully Deleted !")
-             setData(differenceBy(data, selectedRows, 'name'));
-          })
-          .catch(function (error) {
-            toast.error("delete failed !")
-          });
-         
-        }
-      };
   
-      return <button key="delete" className="btn btn-danger" onClick={handleDelete}>Delete</button>;
-    }, [data, selectedRows, toggleCleared]);
+    async get()
+    {
+      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country")
+      .then(function(response) {
+        return response.data.data
+      }).catch(function(error) {
+        // toast.error("Config Categories does't exists!")
+        console.log(error)
+      })
+      this.setState({data: data});
+    }
 
-    return (
-        <Fragment>
-        <Breadcrumb parent="Area" title="Country"/>
+    async editRecord(item)
+    {
+      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country/"+item.id)
+      .then(function(response) {
+        return response.data.data
+      }).catch(function(error) {
+        toast.error("Countries does't exists!")
+      })
+      const category={namear:data.titlear,nameen:data.titleen,id:item.id}
+      this.setState({category: category })
+    }
+
+    tableColumns = [
+      {
+          name: 'ID',
+          selector: 'id', 
+          sortable: true,
+          center:true,
+      },
+      {
+          name: 'name',
+          selector: 'name',
+          sortable: true,
+          center:true,
+      },  {
+          name: "action",
+          text: "Action",
+          className: "action",
+          width: 100,
+          align: "left",
+          sortable: false,
+          cell: record => { 
+              return (
+                  <Fragment>
+                      <button
+                          className="btn btn-primary btn-sm"
+                          onClick={() => this.editRecord(record)}
+                          style={{marginRight: '5px'}}>
+                          <i className="fa fa-edit"></i>
+                      </button>
+                  </Fragment>
+              );
+          }
+      }
+     
+     
+    ]
+
+    handleRowSelected= state => {
+      this.setState({ selectedRows: state.selectedRows });
+    }
+
+  
+
+   handleDelete = () => {
+                                    
+    if (window.confirm(`Are you sure you want to delete:\r ${this.state.selectedRows.map(r => r.name)}?`)) {
+      this.setState({ toggleCleared: !this.state.toggleCleared });
+      let deleteCategory = axios.post('https://aplus-code.com/alhabbal/store/api/country/1', {
+        data: JSON.stringify(this.state.selectedRows),
+        _method: 'DELETE'
+      })
+      .then(function (response) {
+         return toast.success("Successfully Deleted !")
+      })
+      .catch(function (error) {
+        toast.error("delete failed !")
+      });
+      this.setState({data: differenceBy(this.state.data, this.state.selectedRows, 'name')});
+    }
+  };
+    
+ 
+  render()
+  {
+    
+    return(
+      <Fragment>
+        <Breadcrumb parent="Setting" title="Country"/>
         <Container fluid={true}>
                 <Row>
                     
                     <Col sm="12">
                         <Card>
                             <CardHeader>
-                                <EditCategoryConfig  category={category}/>
+                                <EditGovern changeCategory={this.changeCategory} setName={this.setName} category={this.state.category}/>
                             </CardHeader>
                             <CardBody>
                               <DataTable
-                                data={data}
-                                columns={tableColumns}
+                                data={this.state.data}
+                                columns={this.tableColumns}
                                 striped={true}
                                 center={true}
                                 selectableRows
                                 persistTableHead
-                                contextActions={contextActions}
-                                onSelectedRowsChange={handleRowSelected}
-                                clearSelectedRows={toggleCleared}
+                                contextActions= {<button key="delete" className="btn btn-danger" onClick={this.handleDelete}>Delete</button>}
+                                onSelectedRowsChange={this.handleRowSelected}
+                                clearSelectedRows={this.state.toggleCleared}
                               />
                             
                             </CardBody>
@@ -135,7 +157,9 @@ const editRecord =(props)=>
             </Container>
         </Fragment>
     );
+  }
+ 
+}
 
-};
 
 export default Government;

@@ -25,8 +25,8 @@ class CountryController extends Controller
     public function store(Request $request)
     {
         $data=$request->validate([
-            'name:ar'=>'required',
-            'name:en'=>'required'
+            'namear'=>'required',
+            'nameen'=>'required'
         ]);
 
         $country = $this->storeCountry($data);
@@ -36,13 +36,19 @@ class CountryController extends Controller
     
     public function show($id)
     {
-        return view('areamodule::show');
+        $item = Country::find($id);
+        $result =[];
+        $result['titlear']=$item->translate('ar')->name; 
+        $result['titleen']=$item->translate('en')->name; 
+        $result['id']=$item->id; 
+        return json_encode(['data'=>$result]);
     }
 
    
     public function update(Request $request, $id)
     {
-        //
+        $updateCountry= $this->updateCountry($request->except('_method'),$id);
+        return $updateCountry;
     }
 
     public function destroy(Request $request , $id)

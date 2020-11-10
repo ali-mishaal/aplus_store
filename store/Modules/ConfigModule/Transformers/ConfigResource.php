@@ -18,7 +18,9 @@ class ConfigResource extends JsonResource
         [
             'id'=>$this->id,
             'name'=>$this->name,
-            'key'=>$this->key
+            'key'=>$this->key,
+            'type'=>$this->type,
+            'config_category_id'=>$this->config_category_id
         ];
     }
 }

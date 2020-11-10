@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 
 
-class TabLine extends React.Component
+class EditConfig extends React.Component
 {
   constructor()
     {
@@ -17,78 +17,72 @@ class TabLine extends React.Component
         inputValues:'',
         formData:'',
         category:'',
-        data:''
+        configs:'',
+        LeftLineTab:'1',
+        RightLineTab:'1'
       }
-
-      
     }
-    componentDidMount()
+
+    async componentDidMount() {
+      this.getConfigCategory()
+      this.getConfigs()
+    }
+
+    componentDidUpdate()
     {
-        this.getConfigCategory()
-        this.getConfigs() 
-        // var arr = [];
-        // this.props.category.map(function(name, keyIndex){
-        //   console.log('mn')
-        //   arr.push(name);
-        // })
-
-        // this.setState({formData: arr});
-        console.log(this.state.category)
- 
-
+      console.log(this.state.configs)
+      // this.getConfigCategory()
+      // this.getConfigs() 
+        // console.log(this.getConfigCategory)
     }
      
 
     async getConfigCategory()
     {
-      let data = await axios.get("http://127.0.0.1:8000/api/configCategory")
+      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory")
       .then(function(response) {
         return response.data.data;
       }).catch(function(error) {
         toast.error("Config Categories does't exists!")
       })
       this.setState({category: data})
-      
+      this.setState({LeftLineTab: data[0].id})
     }
 
     async getConfigs()
     {
-      let data = await axios.get("http://127.0.0.1:8000/api/config")
+      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/config")
       .then(function(response) {
         return response.data.data;
       }).catch(function(error) {
         toast.error("Config Categories does't exists!")
       })
-      console.log(data)
+      this.setState({configs: data})
     }
 
     handleChange=event=>
     {
-      const{name,value} = event.target;
-      let form = this.state.form;
-      form[name] = value
-      this.setState({form})
+      const{name,value,id} = event.target;
+      let config = this.state.configs;
+      config[id].name = value
+      this.setState({config})
     }
 
     onSubmit = () => {
-      let dataForm = document.getElementById('create')
+      let dataForm = document.getElementById('update')
       let formData = new FormData(dataForm);
-      let urlApi = "http://127.0.0.1:8000/api/configCategory/"+this.state.form.id 
+      let urlApi = "https://aplus-code.com/alhabbal/store/api/config/1" 
       let config = 
       {     
           headers: { 'content-type': 'multipart/form-data' }
       }
     
-      if(Object.entries(this.props.category).length >0)
-      {
-        formData.append('_method', 'PUT')
-      }
   
         axios.post(urlApi, 
                    formData,config)
             .then(function (response) {
                toast.success(response.data.message)
-               window.location.reload(false)
+              //  window.location.reload(false)
             })
             .catch(function (error) {
               toast.error("created failed !")
@@ -100,35 +94,84 @@ class TabLine extends React.Component
 
     render()
   {
+    
+    if (!this.state.category || !this.state.configs) {
+      return <div>please wait ...</div>;
+    }
     return(
       <Fragment>
-       
-        <Container fluid={true}>
-            <Row>
-             <Col  sm="12" xl="6 xl-100">
-                <Card>
-               
-                  <CardBody>
-                    <Row>
-                      <Col sm="3"className="tabs-responsive-side">
-                      <Nav className="flex-column nav-pills border-tab nav-left" >
-                   
-                    </Nav>
-                    </Col>
-                    <Col sm="9">
+      <Container fluid={true}>
+          <Row>
+           <Col  sm="12" xl="6 xl-100">
+              <Card>
+                <CardBody>
+                  <Row>
+                    <Col sm="3"className="tabs-responsive-side">
+                    <Nav className="flex-column nav-pills border-tab nav-left" >
+                    {this.state.category.map((data, i)=>(
+                      <NavItem>
+                          <NavLink href="#javascript"  
+                          className={this.state.LeftLineTab === data.id ? 'active' : ''} 
+                          onClick={() => this.setState({LeftLineTab:data.id})}>
+                            {data.title}</NavLink>
+                      </NavItem>
+                        )
+                    )}
                     
-                    </Col>
-                    </Row>
-                </CardBody>
-                </Card>
-                 </Col>
-           </Row>
-          </Container>
-          </Fragment>
+                  </Nav>
+                  </Col>
+                  <Col sm="9">
+                  <Form id="update" className="needs-validation" noValidate="" >
+                         <Input  name="_method" type="hidden" value="PUT"   />
+
+                        <div className="form-row">
+                      <TabContent className="tab-content col-md-12" activeTab={this.state.LeftLineTab}>
+                      {this.state.category.map((data, i)=>(
+
+                        <TabPane  className="fade show" tabId={data.id}>
+                            {this.state.configs.map((config, x)=>
+                            (
+                            
+                               config.config_category_id===data.id &&  
+                               <Row>
+                                <Col md="12 mb-3">
+                                       <label>{config.key}</label>
+                                       <Input className="form-control" 
+                                         name={config.key} type="text"
+                                         id={x} 
+                                         onChange={this.handleChange} 
+                                         value={config.name}   
+                                         placeholder={config.key}  />
+                                       <div className="valid-feedback">Looks good!</div>
+                                     </Col>
+                                </Row>
+                                )
+                            )}
+                        </TabPane>
+                      )
+                      )}
+                       
+                      </TabContent>
+                      <Col md="2 mb-3">
+                            <Button onClick={this.onSubmit} color="primary">update</Button>
+                        </Col>
+
+                         </div>
+                      </Form>
+                  </Col>
+                  </Row>
+              </CardBody>
+              </Card>
+               </Col>
+         </Row>
+        </Container>
+        </Fragment>
+  
     )
-  }
+  
+}
 
 }
  
 
-export default TabLine;
+export default EditConfig;

@@ -160,8 +160,9 @@ const Sidebar = (props) => {
        <header className="main-nav">
           <div className="logo-wrapper">
             <Link to={`${process.env.PUBLIC_URL}/dashboard/default`}>
-              <img className="img-fluid for-light" src={require("../../assets/images/logo/logo.png")} alt="" />
-              <img className="img-fluid for-dark" src={require("../../assets/images/logo/logo_dark.png")} alt="" />
+              {/* <img className="img-fluid for-light" src={require("../../assets/images/logo/logo.png")} alt="" />
+              <img className="img-fluid for-dark" src={require("../../assets/images/logo/logo_dark.png")} alt="" /> */}
+              <h1>Al Habbal</h1>
               <div className="back-btn" onClick={() => responsiveSidebar()}><i className="fa fa-angle-left"></i></div>
             </Link>
             <div className="toggle-sidebar" onClick={() => openCloseSidebar(sidebartoogle)}><Grid className="status_toggle middle" id="sidebar-toggle" /></div>

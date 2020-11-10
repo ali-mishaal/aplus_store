@@ -24,6 +24,14 @@ class Category extends React.Component
       
     }
 
+    setName = (data) => {
+      this.setState({ data: data })
+    }
+
+    changeCategory = () => {
+      this.setState({ category: '' })
+    }
+
     componentDidMount()
     {
        this.get()
@@ -32,18 +40,19 @@ class Category extends React.Component
   
     async get()
     {
-      let data = await axios.get("http://127.0.0.1:8000/api/configCategory")
+      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory")
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
-        toast.error("Config Categories does't exists!")
+        // toast.error("Config Categories does't exists!")
+        console.log(error)
       })
       this.setState({data: data});
     }
 
     async editRecord(item)
     {
-      let data = await axios.get("http://127.0.0.1:8000/api/configCategory/"+item.id)
+      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory/"+item.id)
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -99,7 +108,7 @@ class Category extends React.Component
                                     
     if (window.confirm(`Are you sure you want to delete:\r ${this.state.selectedRows.map(r => r.title)}?`)) {
       this.setState({ toggleCleared: !this.state.toggleCleared });
-      let deleteCategory = axios.post('http://127.0.0.1:8000/api/configCategory/1', {
+      let deleteCategory = axios.post('https://aplus-code.com/alhabbal/store/api/configCategory/1', {
         data: JSON.stringify(this.state.selectedRows),
         _method: 'DELETE'
       })
@@ -116,6 +125,7 @@ class Category extends React.Component
  
   render()
   {
+    
     return(
       <Fragment>
         <Breadcrumb parent="Setting" title="Catgeory"/>
@@ -125,7 +135,7 @@ class Category extends React.Component
                     <Col sm="12">
                         <Card>
                             <CardHeader>
-                                <EditCategoryConfig  category={this.state.category}/>
+                                <EditCategoryConfig changeCategory={this.changeCategory} setName={this.setName} category={this.state.category}/>
                             </CardHeader>
                             <CardBody>
                               <DataTable

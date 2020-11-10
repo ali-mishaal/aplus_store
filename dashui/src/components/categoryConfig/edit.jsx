@@ -62,7 +62,7 @@ class EditCategoryConfig extends React.Component
    onSubmit = () => {
     let dataForm = document.getElementById('create')
     let formData = new FormData(dataForm);
-    let urlApi = "http://127.0.0.1:8000/api/configCategory/"+this.state.form.id 
+    let urlApi = "https://aplus-code.com/alhabbal/store/api/configCategory/"+this.state.form.id 
     let config = 
     {     
         headers: { 'content-type': 'multipart/form-data' }
@@ -73,18 +73,43 @@ class EditCategoryConfig extends React.Component
       formData.append('_method', 'PUT')
     }
 
-      axios.post(urlApi, 
+        axios.post(urlApi, 
                  formData,config)
           .then(function (response) {
              toast.success(response.data.message)
-             window.location.reload(false)
-          })
-          .catch(function (error) {
-            toast.error("created failed !")
+          }).catch(function (error) {
+            toast.error('error')
           });
-     
+
+          setTimeout(
+            function() {
+              this.get()
+          this.props.changeCategory()
+          this.setState({
+            form: {titlear:"",titleen:"",id:"",isedit:false},
+            btnname:'create',
+            btncolor:'primary',
+  
+          })
+            }
+            .bind(this),
+            3000
+        );
+
+          
   };
 
+  async get()
+  {
+    let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory")
+    .then(function(response) {
+      return response.data.data
+    }).catch(function(error) {
+      // toast.error("Config Categories does't exists!")
+      console.log(error)
+    })
+    this.props.setName(data);
+  }
 
   render()
   {

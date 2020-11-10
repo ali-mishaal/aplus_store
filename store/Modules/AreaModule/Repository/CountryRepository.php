@@ -34,31 +34,37 @@ trait CountryRepository
         }
     }
 
-    function storeCountry($data)
+    function storeCountry($request)
     {
-        $country = Country::create($data);
-        if($country)
+      $data['ar']['name'] = $request['namear'];
+      $data['en']['name'] = $request['nameen'];
+     
+      $createCuntry = Country::create($data);
+      if($createCuntry)
       {
          $responseSuccess = \ResponseHelper::getInstance()
          ->setMessage('created successfully')
          ->response();
-         return $responseSuccess;
+         return $responseSuccess;  
       }
-
+ 
       throw new BadRequestException();
     }
 
-    function updateCountry($id,$data)
+    function updateCountry($request,$id)
     {
-        $country = Country::where('id',$id)->update($data);
-        if($country)
+        $item = Country::find($id);
+        $data['ar']['name'] = $request['namear'];
+        $data['en']['name'] = $request['nameen'];
+        $updateCountry = $item->update($data);
+        if($updateCountry)
         {
-            $responseSuccess = \ResponseHelper::getInstance()
-            ->setMessage('updated successfully')
-            ->response();
-            return $responseSuccess;
+           $responseSuccess = \ResponseHelper::getInstance()
+           ->setMessage('updated successfully')
+           ->response();
+           return $responseSuccess;  
         }
-
+   
         throw new BadRequestException();
     }
 

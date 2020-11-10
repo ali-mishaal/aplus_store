@@ -2,7 +2,7 @@
   "name": "store-aplus",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://webiots.co.in/store/",
+  "homepage": "https://aplus-code.com/alhabbal/dashui/",
   "dependencies": {
     "@fullcalendar/daygrid": "^5.1.0",
     "@fullcalendar/interaction": "^5.1.0",
@@ -15,6 +15,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "apexcharts": "^3.20.0",
+    "array-unique": "^0.3.2",
     "axios": "^0.20.0",
     "body-scroll-lock": "^3.0.3",
     "bootstrap-scss": "^4.5.0",

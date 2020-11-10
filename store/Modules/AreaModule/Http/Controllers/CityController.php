@@ -23,9 +23,9 @@ class CityController extends Controller
     {
         
         $data=$request->validate([
-            'name:ar'=>'required',
-            'name:en'=>'required',
-            'country_id'=>'required'
+            'namear'=>'required',
+            'nameen'=>'required',
+            'country'=>'required'
         ]);
 
         $country = $this->storeCity($data);
@@ -35,13 +35,20 @@ class CityController extends Controller
   
     public function show($id)
     {
-        return view('areamodule::show');
+        $item = City::find($id);
+        $result =[];
+        $result['titlear']=$item->translate('ar')->name; 
+        $result['titleen']=$item->translate('en')->name; 
+        $result['country']=$item->country->id; 
+        $result['id']=$item->id; 
+        return json_encode(['data'=>$result]);
     }
 
 
     public function update(Request $request, $id)
     {
-        //
+        $updateCity= $this->updateCity($request->except('_method'),$id);
+        return $updateCity;
     }
 
     public function destroy(Request $request , $id)
