@@ -14,6 +14,19 @@ class SingleProductResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return 
+        [
+            'id'=>$this->id,
+            'category'=>$this->category->id??'',
+            'measurement'=>$this->measurement->id??'',
+            'namear'=>$this->translate('ar')->name,
+            'nameen'=>$this->translate('en')->name,
+            'descriptionar'=>$this->translate('ar')->description,
+            'descriptionen'=>$this->translate('en')->description,
+            'model'=>$this->model,
+            'quantity'=>$this->quantity,
+            'attribute'=>ProductAttributeResource::collection($this->attributes),
+            'image'=>asset('/files/product/'.$this->image),
+        ];
     }
 }

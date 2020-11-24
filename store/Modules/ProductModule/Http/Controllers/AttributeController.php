@@ -7,13 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Modules\ProductModule\Repository\AttributeRepository;
 use Modules\ProductModule\Http\Requests\CategoryUpdateRequest;
-
+use Illuminate\Support\Facades\Artisan;
 class AttributeController extends Controller
 {
     use AttributeRepository;
 
     public function index()
     {
+       
         $attributes = $this->getAllAttributes();
         return $attributes;
     }
@@ -29,6 +30,7 @@ class AttributeController extends Controller
    
     public function show($id)
     {
+     
         $attribute = $this->showAttribute($id);
         return $attribute;
     }

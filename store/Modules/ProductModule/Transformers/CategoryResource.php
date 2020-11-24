@@ -12,7 +12,7 @@ class CategoryResource extends JsonResource
         return [
             'id'     =>$this->id,
             'name'   =>$this->name,
-            'image'  =>$request->getHttpHost().'/files/category/'.$this->image,
+            'image'  =>asset('/files/category/'.$this->image)
         ];
     }
 }

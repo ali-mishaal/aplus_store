@@ -46,17 +46,26 @@ trait ProductRepository
       $data['category_id']=$request['category_id'];
       $data['measurement_id']=$request['measurement_id'];
       $data['image'] = $this->uploadFile($request['image'],'product');
-      $data['imgs'] = $this->uploadFile($request['imgs'],'product');
+    //   $data['imgs'] = $this->uploadAlbum($request['imgs'],'product');
+
+      $data['imgs'] = 'cxzcx';
+    
      
       $createProduct = Product::create($data);
 
-      $attribute['attribute_id']=$request['attribute_id'];
-      $attribute['value']=$request['attributeValue'];
+      
       
       if($createProduct)
       {
-         $attribute['product_id']=$createProduct->id;
-         $createProductAttribute = ProductAttribute::create($attribute);
+          $values = $request['attributeValue'];
+          for($i=0;$i<count($values);$i++)
+          {
+              $attribute['attribute_id']=$request['input-'.$i.'attribute_id'];
+              $attribute['value']=$values[$i];
+              $attribute['product_id']=$createProduct->id;
+              $createProductAttribute = ProductAttribute::create($attribute);
+          }
+       
          $responseSuccess = \ResponseHelper::getInstance()
          ->setMessage('created successfully')
          ->response();
@@ -77,19 +86,31 @@ trait ProductRepository
       $data['quantity']=$request['quantity'];
       $data['category_id']=$request['category_id'];
       $data['measurement_id']=$request['measurement_id'];
+     
+     
 
       if(isset($request['image']))$data['image'] = $this->uploadFile($request['image'],'product');
-      if(isset($request['imgs']))$data['imgs'] = $this->uploadFile($request['imgs'],'product');
+    //   if(isset($request['imgs']))$data['imgs'] = $this->uploadAlbum($request['imgs'],'product');
 
-      $attribute['attribute_id']=$request['attribute_id'];
-      $attribute['value']=$request['attributeValue'];
+if(isset($request['imgs']))$data['imgs'] ='dsfdsf';
 
-      $deleteProductAttribute = ProductAttribute::where('product_id',$item->id)->delete();
-      $createProductAttribute = ProductAttribute::create($attribute);
+     
+
+
 
       $updateProduct = $item->update($data);
       if($updateProduct)
-      {
+      {    
+          ProductAttribute::where('product_id',$item->id)->delete();
+          $values = $request['attributeValue'];
+          for($i=0;$i<count($values);$i++)
+          {
+              $attribute['attribute_id']=$request['input-'.$i.'attribute_id'];
+              $attribute['value']=$values[$i];
+              $attribute['product_id']=$item->id;
+              $createProductAttribute = ProductAttribute::create($attribute);
+          }
+       
          $responseSuccess = \ResponseHelper::getInstance()
          ->setMessage('updated successfully')
          ->response();
@@ -108,7 +129,7 @@ trait ProductRepository
       
       if($item)
      {
-        $data = ProductResource::make($item);
+        $data = SingleProductResource::make($item);
         $responseSuccess = \ResponseHelper::getInstance()
         ->setData($data)
         ->response();
