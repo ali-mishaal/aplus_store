@@ -2,9 +2,6 @@ import React, { Fragment, useState, useLayoutEffect, useEffect } from 'react';
 import { Container, Row, Col } from 'reactstrap'
 import { X, Layers, Grid } from 'react-feather'
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
   Link
 } from 'react-router-dom';
 import { errorPages, authPages, usefullPages, comingsoonPages } from './pages'

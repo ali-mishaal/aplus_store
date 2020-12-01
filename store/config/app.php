@@ -177,6 +177,9 @@ return [
         App\Providers\FortifyServiceProvider::class,
         App\Providers\JetstreamServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class
+
+
 
     ],
 
@@ -232,6 +235,8 @@ return [
         'ResponseHelper' => App\Helpers\ResponseHelper::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Image' => Intervention\Image\Facades\Image::class
+
 
     ],
 

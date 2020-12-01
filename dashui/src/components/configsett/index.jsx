@@ -1,10 +1,10 @@
-import React,{useEffect,useState,Fragment} from 'react';
+import React,{Fragment} from 'react';
 import Breadcrumb from '../../layout/breadcrumb'
-import {useForm} from 'react-hook-form'
-import {Container,Row,Col,Card,CardHeader,CardBody,Nav,NavItem,NavLink,TabContent,TabPane,Button,Form,FormGroup,Label,Input,InputGroup,InputGroupAddon,InputGroupText} from 'reactstrap'
+import {Container,Row,Col,Card,CardBody,Nav,NavItem,NavLink,TabContent,TabPane,Button,Form,Input} from 'reactstrap'
 import axios from 'axios'
 import { toast } from 'react-toastify';
-
+import i18next from 'i18next';
+import SimpleMDE from "react-simplemde-editor";
 
 
 class ConfigSett extends React.Component
@@ -28,18 +28,11 @@ class ConfigSett extends React.Component
       this.getConfigs()
     }
 
-    componentDidUpdate()
-    {
-      console.log(this.state.configs)
-      // this.getConfigCategory()
-      // this.getConfigs() 
-        // console.log(this.getConfigCategory)
-    }
-     
+   
 
     async getConfigCategory()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory")
+      let data = await axios.get("admin/configCategory")
       .then(function(response) {
         return response.data.data;
       }).catch(function(error) {
@@ -51,7 +44,7 @@ class ConfigSett extends React.Component
 
     async getConfigs()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/config")
+      let data = await axios.get("admin/config")
       .then(function(response) {
         return response.data.data;
       }).catch(function(error) {
@@ -64,14 +57,14 @@ class ConfigSett extends React.Component
     {
       const{name,value,id} = event.target;
       let config = this.state.configs;
-      config[id].name = value
+      config[id].description = value
       this.setState({config})
     }
 
     onSubmit = () => {
       let dataForm = document.getElementById('update')
       let formData = new FormData(dataForm);
-      let urlApi = "https://aplus-code.com/alhabbal/store/api/config/1" 
+      let urlApi = "admin/config/1" 
       let config = 
       {     
           headers: { 'content-type': 'multipart/form-data' }
@@ -82,7 +75,6 @@ class ConfigSett extends React.Component
                    formData,config)
             .then(function (response) {
                toast.success(response.data.message)
-              //  window.location.reload(false)
             })
             .catch(function (error) {
               toast.error("created failed !")
@@ -100,6 +92,7 @@ class ConfigSett extends React.Component
     }
     return(
       <Fragment>
+        <Breadcrumb parent={i18next.t('setting')} title={i18next.t('config')}/>
       <Container fluid={true}>
           <Row>
            <Col  sm="12" xl="6 xl-100">
@@ -129,22 +122,23 @@ class ConfigSett extends React.Component
                       {this.state.category.map((data, i)=>(
 
                         <TabPane  className="fade show" tabId={data.id}>
-                            {console.log(data.id)}
                             {this.state.configs.map((config, x)=>
                             (
                             
                                
                                <Row>
-                                {config.config_category_id==data.id &&  
+                                {config.config_category_id==data.id &&  config.type==1 &&
                                 <Col md="12 mb-3">
-                                       <label>{config.key}</label>
+                                       <label>{config.name}</label>
+                                       
                                        <Input className="form-control" 
                                          name={config.key} type="text"
                                          id={x} 
                                          onChange={this.handleChange} 
-                                         value={config.name}   
+                                         value={config.description}   
                                          placeholder={config.key}  />
                                        <div className="valid-feedback">Looks good!</div>
+                                      
                                      </Col>
                                 }
                                 </Row>
@@ -156,7 +150,7 @@ class ConfigSett extends React.Component
                        
                       </TabContent>
                       <Col md="2 mb-3">
-                            <Button onClick={this.onSubmit} color="primary">update</Button>
+                            <Button onClick={this.onSubmit} color="primary">{i18next.t('update')}</Button>
                         </Col>
 
                          </div>

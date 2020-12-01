@@ -18,15 +18,16 @@ class ProductController extends Controller
         return $products;
     }
 
- 
 
-    public function store(ProductRequest $request)
+
+    public function store(Request $request)
     {
+
         $createProduct = $this->CreateProduct($request->all());
         return $createProduct;
     }
 
-   
+
     public function show($id)
     {
         $product = $this->showProduct($id);
@@ -36,15 +37,18 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
+
         $UpdateProduct = $this->UpdateProduct($request->except('_method'),$id);
         return $UpdateProduct;
     }
 
-   
+
     public function destroy(Request $request,$id)
     {
         $deleteProduct = $this->deleteProduct($request->except('_method'));
         return $deleteProduct;
-        
+
     }
+
+   
 }

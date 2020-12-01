@@ -14,10 +14,13 @@ use Illuminate\Http\Request;
 */
 
 
-
-Route::resource('/configCategory','ConfigCategoryController');
-Route::resource('/config','ConfigModuleController');
-
-Route::middleware('auth:api')->get('/configmodule', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['jwt.verify'],'prefix'=>'admin'], function() {
+        Route::resource('/configCategory','ConfigCategoryController');
+        Route::resource('/config','ConfigModuleController');
+        Route::resource('/sliders','SliderController');
+        Route::resource('/news','NewsController');
+        Route::resource('/informations','InformationController');
+        Route::resource('/careers','CareerController');
+        Route::resource('/services','ServiceController');
+        
 });

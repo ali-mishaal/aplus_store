@@ -1,9 +1,8 @@
-import React, { Fragment,useEffect,useState,useCallback,useMemo} from 'react';
+import React, { Fragment} from 'react';
 import Breadcrumb from '../../layout/breadcrumb'
 import differenceBy from 'lodash/differenceBy';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component'
-import {tableData} from '../../data/dummyTableData'
 import { Container,Row,Col,Card,CardHeader,CardBody} from 'reactstrap';
 import EditGovern from './edit' 
 import axios from 'axios'
@@ -40,7 +39,7 @@ class Government extends React.Component
   
     async get()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country")
+      let data = await axios.get("country")
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -52,7 +51,7 @@ class Government extends React.Component
 
     async editRecord(item)
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country/"+item.id)
+      let data = await axios.get("country/"+item.id)
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -108,7 +107,7 @@ class Government extends React.Component
                                     
     if (window.confirm(`Are you sure you want to delete:\r ${this.state.selectedRows.map(r => r.name)}?`)) {
       this.setState({ toggleCleared: !this.state.toggleCleared });
-      let deleteCategory = axios.post('https://aplus-code.com/alhabbal/store/api/country/1', {
+      let deleteCategory = axios.post('country/1', {
         data: JSON.stringify(this.state.selectedRows),
         _method: 'DELETE'
       })

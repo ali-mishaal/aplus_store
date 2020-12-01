@@ -1,14 +1,19 @@
-import { Home, Airplay, Box, FolderPlus, Command, Cloud, FileText, Server, BarChart, Users, Layers, ShoppingBag, List, Mail, MessageCircle, GitPullRequest, Monitor, Heart, Clock, Zap, CheckSquare, Calendar, Image, Film, HelpCircle, Radio, Map, Edit, Sunrise, Package } from 'react-feather'
+import {  Box, Map } from 'react-feather'
 export const MENUITEMS = [
     {
         menutitle:"General",
-        menucontent:"Dashboards,Widgets",
+        menucontent:"",
         Items:[
             
             {
                 title: 'Setting', icon: Box, type: 'sub', active: false, children: [
-                    { path: `${process.env.PUBLIC_URL}/setting/category-config`, title: 'CategoryConfig', type: 'link' },
-                    { path: `${process.env.PUBLIC_URL}/setting/config`, title: 'Config', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/setting/category-config`, title: 'CategoryConfig', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/setting/config`, title: 'Config', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/setting/news`, title: 'News', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/setting/slider`, title: 'Slider', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/setting/informations`, title: 'Informations', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/setting/careers`, title: 'Careers', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/setting/services`, title: 'Services', type: 'link' },
                 ]
             }
         ]
@@ -20,8 +25,10 @@ export const MENUITEMS = [
             
             {
                 title: 'Products', icon: Box, type: 'sub', active: false, children: [
-                    { path: `${process.env.PUBLIC_URL}/products/attributes`, title: 'Attributes', type: 'link' },
-                    { path: `${process.env.PUBLIC_URL}/products/measurements`, title: 'Measurements', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/products/categories`, title: 'Categories', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/products/products`, title: 'Products', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/products/attributes`, title: 'Attributes', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/products/measurements`, title: 'Measurements', type: 'link' },
                 ]
             }
         ]
@@ -31,14 +38,12 @@ export const MENUITEMS = [
         menutitle:"Area",
         menucontent:"Ready to use Area",
         Items:[
-            { path: `${process.env.PUBLIC_URL}/area/country`,icon:Map, title: 'country', type: 'link' },
-            { path: `${process.env.PUBLIC_URL}/area/city`,icon:Map, title: 'city', type: 'link' },
-            // {
-            //     title: 'Project',icon:Box, type: 'sub',badge: "badge badge-danger",badgetxt:"New",active:false, children: [
-            //         { path: `${process.env.PUBLIC_URL}/app/project/project-list`, type: 'link', title: 'Project List' },
-            //         { path: `${process.env.PUBLIC_URL}/app/project/new-project`, type: 'link', title: 'Create New' }
-            //     ]
-            // },
+            
+            {
+                title: 'Area',icon:Box, type: 'sub',badge: "badge badge-danger",active:false, children: [
+                    { path: `${process.env.PUBLIC_URL}/dashboard/area/country`,icon:Map, title: 'country', type: 'link' },
+                    { path: `${process.env.PUBLIC_URL}/dashboard/area/city`,icon:Map, title: 'city', type: 'link' }, ]
+            },
             // {
             //     title: 'Ecommerce', icon:ShoppingBag, type: 'sub',active:false, children: [
             //         { path: `${process.env.PUBLIC_URL}/app/ecommerce/product`, title: 'Product', type: 'link' },

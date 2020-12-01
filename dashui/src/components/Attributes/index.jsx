@@ -5,9 +5,9 @@ import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component'
 import {tableData} from '../../data/dummyTableData'
 import { Container,Row,Col,Card,CardHeader,CardBody} from 'reactstrap';
-import EditGovern from './edit' 
+import EditAttribute from './edit' 
 import axios from 'axios'
-import api from './../../api'
+
 
 class Attribute extends React.Component
 {
@@ -19,11 +19,15 @@ class Attribute extends React.Component
         selectedRows:'',
         toggleCleared:false,
         category:'',
-        data:''
+        data:'',
+        token:''
       }
 
       
     }
+
+   
+  
 
     setName = (data) => {
       this.setState({ data: data })
@@ -35,13 +39,23 @@ class Attribute extends React.Component
 
     componentDidMount()
     {
-       this.get()
+       this.setState({token:localStorage.getItem('_token')})
+       setTimeout(
+        function() {
+          this.get()
+        }
+        .bind(this),
+        3000
+       );
+       
     }
 
+   
   
     async get()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country")
+     
+      let data = await axios.get("admin/attributes",{ headers: {"Authorization" : `Bearer ${this.state.token}`} })
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -53,8 +67,7 @@ class Attribute extends React.Component
 
     async editRecord(item)
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country/"+item.id)
-      .then(function(response) {
+      let data = await axios.get("admin/attributes/"+item.id,{ headers: {"Authorization" : `Bearer ${this.state.token}`} })      .then(function(response) {
         return response.data.data
       }).catch(function(error) {
         toast.error("Countries does't exists!")
@@ -109,10 +122,12 @@ class Attribute extends React.Component
                                     
     if (window.confirm(`Are you sure you want to delete:\r ${this.state.selectedRows.map(r => r.name)}?`)) {
       this.setState({ toggleCleared: !this.state.toggleCleared });
-      let deleteCategory = axios.post('https://aplus-code.com/alhabbal/store/api/country/1', {
+      let deleteCategory = axios.post("admin/attributes/1", {
         data: JSON.stringify(this.state.selectedRows),
         _method: 'DELETE'
-      })
+      },
+      { headers: {"Authorization" : `Bearer ${this.state.token}`} }
+      )
       .then(function (response) {
          return toast.success("Successfully Deleted !")
       })
@@ -129,14 +144,14 @@ class Attribute extends React.Component
     
     return(
       <Fragment>
-        <Breadcrumb parent="Setting" title="Country"/>
+        <Breadcrumb parent="Products" title="Attribute"/>
         <Container fluid={true}>
                 <Row>
                     
                     <Col sm="12">
                         <Card>
                             <CardHeader>
-                                <EditGovern changeCategory={this.changeCategory} setName={this.setName} category={this.state.category}/>
+                                <EditAttribute changeCategory={this.changeCategory} setName={this.setName} category={this.state.category}/>
                             </CardHeader>
                             <CardBody>
                               <DataTable

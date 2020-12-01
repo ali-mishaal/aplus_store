@@ -88,8 +88,8 @@ trait ConfigRepository
         {
             $getConfig = Config::where('key',$key)->first();
             $dataUpdated=[];
-            $dataUpdated['name:en'] = $value;
-            $dataUpdated['name:ar'] = $value;
+            $dataUpdated['description:en'] = $value;
+            $dataUpdated['description:ar'] = $value;
             // $dataUpdated['description:en'] = $getConfig->type == 3?$data[$key[0]][2]:'';
             // $dataUpdated['description:ar'] = $getConfig->type == 3?$data[$key[0]][2]:'';
             $getConfig->update($dataUpdated);  
@@ -106,44 +106,8 @@ trait ConfigRepository
       throw new BadRequestException();
    }
 
-   public function loginAdmin($request)
-   {
-       if (Auth::guard('admin')->attempt(['email' => $request->email,'password'=>$request->password]))
-       {
-           $tokenResult = Auth::guard('admin')->user()->createToken('Admin')->accessToken;
-           $data = [
-                       "access_token"=>$tokenResult,
-                       "token_type"=>"Bearer"
-                   ];
-           $responseSuccess = \ResponseHelper::getInstance()
-               ->setMessage('login success')
-               ->setData($data)
-               ->response();
-           return $responseSuccess;
-       }
 
-        throw new NotAuthorizedException('May be email or password wrong');
-   }
-
-   public function create()
-   {
-
-   }
-
-   public function edit()
-   {
-
-   }
-
-   public function delete()
-   {
-
-   }
-
-   public function show()
-   {
-
-   }
+   
 
 
 }

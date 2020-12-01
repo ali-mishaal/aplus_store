@@ -6,7 +6,8 @@ import axios from 'axios'
 import { toast } from 'react-toastify';
 import { Category } from 'emoji-mart';
 
-class EditGovern extends React.Component
+
+class EditMeasurement extends React.Component
 {
   constructor()
   {
@@ -19,7 +20,8 @@ class EditGovern extends React.Component
       isUpdate:false,
       category:'',
       data:'',
-      categoryForm:''
+      categoryForm:'',
+      token:''
     }
 
     this.form=
@@ -34,6 +36,10 @@ class EditGovern extends React.Component
   isEmpty(obj)
   {
     return Object.entries(obj).length ===0 && obj.constructor===Object;
+  }
+  componentDidMount()
+  {
+    this.setState({token:localStorage.getItem('_token')})
   }
   componentDidUpdate(prevProps)
   {
@@ -62,10 +68,10 @@ class EditGovern extends React.Component
    onSubmit = () => {
     let dataForm = document.getElementById('create')
     let formData = new FormData(dataForm);
-    let urlApi = "https://aplus-code.com/alhabbal/store/api/country/"+this.state.form.id 
+    let urlApi = "admin/measurements/"+this.state.form.id 
     let config = 
     {     
-        headers: { 'content-type': 'multipart/form-data' }
+        headers:{"Authorization" : `Bearer ${this.state.token}`}
     }
   
     if(Object.entries(this.props.category).length >0)
@@ -98,17 +104,19 @@ class EditGovern extends React.Component
           
   };
 
+
   async get()
-  {
-    let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country")
-    .then(function(response) {
-      return response.data.data
-    }).catch(function(error) {
-      // toast.error("Config Categories does't exists!")
-      console.log(error)
-    })
-    this.props.setName(data);
-  }
+    {
+     
+      let data = await axios.get("admin/measurements",{ headers: {"Authorization" : `Bearer ${this.state.token}`} })
+      .then(function(response) {
+        return response.data.data
+      }).catch(function(error) {
+        // toast.error("Config Categories does't exists!")
+        console.log(error)
+      })
+      this.props.setName(data);
+    }
 
   render()
   {
@@ -164,4 +172,4 @@ class EditGovern extends React.Component
 }
 
 
-export default  EditGovern ;
+export default EditMeasurement;

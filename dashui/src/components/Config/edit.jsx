@@ -39,7 +39,7 @@ class EditConfig extends React.Component
 
     async getConfigCategory()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory")
+      let data = await axios.get("configCategory")
       .then(function(response) {
         return response.data.data;
       }).catch(function(error) {
@@ -51,7 +51,7 @@ class EditConfig extends React.Component
 
     async getConfigs()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/config")
+      let data = await axios.get("config")
       .then(function(response) {
         return response.data.data;
       }).catch(function(error) {
@@ -71,7 +71,7 @@ class EditConfig extends React.Component
     onSubmit = () => {
       let dataForm = document.getElementById('update')
       let formData = new FormData(dataForm);
-      let urlApi = "https://aplus-code.com/alhabbal/store/api/config/1" 
+      let urlApi = "config/1" 
       let config = 
       {     
           headers: { 'content-type': 'multipart/form-data' }
@@ -144,6 +144,7 @@ class EditConfig extends React.Component
                                          placeholder={config.key}  />
                                        <div className="valid-feedback">Looks good!</div>
                                      </Col>
+                                    
                                 </Row>
                                 )
                             )}

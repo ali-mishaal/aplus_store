@@ -20,12 +20,12 @@ class ProductResource extends JsonResource
             'id'=>$this->id,
             'category'=>$this->category->name??'',
             'measurement'=>$this->measurement->name??'',
-            'name'=>$this->name,
-            'description'=>$this->description,
-            'model'=>$this->model,
-            'quantity'=>$this->quantity,
+            'name'=>$this->name??'',
+            'description'=>$this->description??'',
+            'model'=>$this->model??'',
+            'quantity'=>$this->quantity??'',
             'attribute'=>ProductAttributeResource::collection($this->attributes),
-            'image'=>$request->getHttpHost().'/files/product/'.$this->image,
+             'image'=>asset('/files/product/'.$this->image),
         ];
     }
 }

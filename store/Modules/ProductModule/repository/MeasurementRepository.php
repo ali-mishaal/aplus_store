@@ -70,17 +70,21 @@ trait MeasurementRepository
    public function showMeasurement($id)
    {
       $item = Measurement::find($id);
-      
-      if($item)
-     {
-        $data = AttributeREsource::make($item);
-        $responseSuccess = \ResponseHelper::getInstance()
-        ->setData($data)
-        ->response();
-        return $responseSuccess;  
-     }
+      $result['titlear']=$item->translate('ar')->name; 
+        $result['titleen']=$item->translate('en')->name; 
+        $result['id']=$item->id; 
+        return json_encode(['data'=>$result]);
+        
+    //   if($item)
+    //  {
+    //     $data = AttributeREsource::make($item);
+    //     $responseSuccess = \ResponseHelper::getInstance()
+    //     ->setData($data)
+    //     ->response();
+    //     return $responseSuccess;  
+    //  }
 
-     throw new BadRequestException();
+    //  throw new BadRequestException();
    }
 
    public function deleteMeasurement($request)

@@ -1,7 +1,8 @@
-import React, { Fragment,useEffect,useState,useCallback,useMemo} from 'react';
-import Breadcrumb from '../../layout/breadcrumb'
-import { Container,Row,Col,Card,CardHeader,CardBody} from 'reactstrap';
-
+import React, { Fragment} from 'react';
+import { Container,Row} from 'reactstrap';
+import '../../i18next'
+import { withTranslation } from "react-i18next";
+import i18next from 'i18next';
 
 class Default extends React.Component
 {
@@ -10,12 +11,16 @@ class Default extends React.Component
   {
     super()
   }
+
+
+  
+
   render()
   {
     
     return(
       <Fragment>
-        <Breadcrumb parent="Setting" title="Catgeory"/>
+       
         <Container fluid={true}>
                 <Row>
                     
@@ -24,6 +29,8 @@ class Default extends React.Component
                     </div>
                 </Row>
             </Container>
+          
+         
         </Fragment>
     );
   }

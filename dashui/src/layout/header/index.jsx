@@ -4,7 +4,16 @@ import {X} from 'react-feather'
 import {MENUITEMS} from '../sidebar/menu'
 import LeftHeader from './leftbar'
 import RightHeader from './rightbar'
-import {Link} from 'react-router-dom'
+
+import { HashRouter as Router,Route,Switch,Redirect,Link} from 'react-router-dom'
+import Signin from '../../auth/signin'
+
+import axios from 'axios'
+
+const token = localStorage.getItem('_token')||'';
+axios.defaults.headers.common['Authorization']=`Bearer ${token}`;
+
+
 
 const Header = (props) => {
 
@@ -22,7 +31,20 @@ const Header = (props) => {
     }
   }, []);
 
+   const check = ()=>
+  {
+   let data =  axios.post("admin-auth/me")
+    .then(function(response) {
+    }).catch(function(error) {
+        localStorage.setItem('user',null)
+        window.location.href=process.env.PUBLIC_URL+'/#/admin/login';
+        
+    })
+
+  }
+
   useEffect(() => {
+      check()
     document.addEventListener("keydown", escFunction, false);
     return () => {
         document.removeEventListener("keydown", escFunction, false);

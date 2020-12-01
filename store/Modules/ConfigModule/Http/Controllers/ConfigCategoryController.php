@@ -16,6 +16,7 @@ class ConfigCategoryController extends Controller
 
     public function index()
     {
+    
         $configCategories = $this->getAllCategoryConfig();
         return $configCategories;
     }

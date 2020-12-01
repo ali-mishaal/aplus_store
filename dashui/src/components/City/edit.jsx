@@ -1,10 +1,7 @@
-import React, { useState ,useEffect, Fragment,componentDidUpdate } from 'react';
-import Breadcrumb from '../../layout/breadcrumb'
-import {useForm} from 'react-hook-form'
-import {Container,Row,Col,Card,CardHeader,CardBody,Button,Form,FormGroup,Label,Input,InputGroup,InputGroupAddon,InputGroupText} from 'reactstrap'
+import React, {  Fragment } from 'react';
+import {Container,Row,Col,Button,Form,Input} from 'reactstrap'
 import axios from 'axios'
 import { toast } from 'react-toastify';
-import { Category } from 'emoji-mart';
 
 class EditCity extends React.Component
 {
@@ -31,10 +28,6 @@ class EditCity extends React.Component
     
   }
 
-  isEmpty(obj)
-  {
-    return Object.entries(obj).length ===0 && obj.constructor===Object;
-  }
   componentDidUpdate(prevProps)
   {
  
@@ -62,7 +55,7 @@ class EditCity extends React.Component
     onSubmit = () => {
     let dataForm = document.getElementById('create')
     let formData = new FormData(dataForm);
-    let urlApi = "https://aplus-code.com/alhabbal/store/api/city/"+this.state.form.id 
+    let urlApi = "city/"+this.state.form.id 
     let config = 
     {     
         headers: { 'content-type': 'multipart/form-data' }
@@ -100,7 +93,7 @@ class EditCity extends React.Component
 
   async get()
   {
-    let data = await axios.get("https://aplus-code.com/alhabbal/store/api/city")
+    let data = await axios.get("city")
     .then(function(response) {
       return response.data.data
     }).catch(function(error) {

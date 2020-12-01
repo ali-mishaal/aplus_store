@@ -1,106 +1,234 @@
-import React, { useState ,useEffect, Fragment,componentDidUpdate } from 'react';
+import React,{useEffect,useState,Fragment} from 'react';
 import Breadcrumb from '../../layout/breadcrumb'
 import {useForm} from 'react-hook-form'
-import {Container,Row,Col,Card,CardHeader,CardBody,Button,Form,FormGroup,Label,Input,InputGroup,InputGroupAddon,InputGroupText} from 'reactstrap'
+import {Container,Row,Col,Card,CardHeader,CardBody,Nav,NavItem,NavLink,TabContent,TabPane,Button,Form,FormGroup,Label,Input,InputGroup,InputGroupAddon,InputGroupText} from 'reactstrap'
 import axios from 'axios'
 import { toast } from 'react-toastify';
-import { Category } from 'emoji-mart';
+import i18next from 'i18next'
+import { withRouter } from 'react-router'
+import { HashRouter as Router,BrowserRouter,Route,Switch,Redirect} from 'react-router-dom'
 
-const EditCategoryConfig = (props) => 
+
+class EditCategory extends React.Component
+{
+  constructor()
     {
-    const { register, handleSubmit, errors } = useForm();
-    const [isUpdate , setIsUpdate] =useState(false);
-    const [titlear , setTitlear] =useState();
-
-    const categoryForm = 
-    {     
-        form: { titlear: '',titleen:'',isEdit:false },
-        btnName: 'save',
-        btnColor:'primary'
+      super()
+      this.state=
+      {
+        inputValues:'',
+        form:{titlear:"",titleen:"",id:"",image:"",isedit:false},
+        category:'',
+        configs:'',
+        LeftLineTab:1,
+        RightLineTab:'1',
+        token:'',
+        toDashboard: false,
+      }
     }
-  
-    const isEmpty=(obj)=>
+
+    componentDidMount()
     {
-      return Object.entries(obj).length === 0 & obj.constructor === Object;
-    }
+       this.setState({token:localStorage.getItem('_token')})
 
-  
-
-    useEffect(() => {
-      if( !isEmpty(props))
-        console.log('update!');
-    }, [props]);
-
-  const config = 
-  {     
-      headers: { 'content-type': 'multipart/form-data' }
-  }
-
-  const onSubmit = data => {
-    let dataForm = document.getElementById('create')
-    let formData = new FormData(dataForm);
-    let urlApi = "http://127.0.0.1:8000/api/configCategory/"
-    // if(isUpdate)
-    // {
-    //   formData.append('<input type="hidden" name="_method" value="PUT"')
-    // }
-
-    if (data !== '') {
-      axios.post(urlApi, 
-                 formData,config)
-          .then(function (response) {
-            console.log(response)
-            
-            setIsUpdate(false)
-             toast.success("Successfully Created !")
-          })
-          .catch(function (error) {
-            console.log(error)
-            toast.error("created failed !")
-          });
+       setTimeout(
+        function() {
+          
+          this.getItem();
+          
+        }
+        .bind(this),
+        3000
+       );
      
-    } else {
-      errors.showMessages();
+     
+     
     }
-  };
 
-  return (
-    <Fragment>
-      
+    async getItem()
+    {
+      let data = await axios.get("admin/category/"+this.props.match.params.id,{ headers: {"Authorization" : `Bearer ${this.state.token}`} })
+      .then(function(response) {
+        return response.data.data;
+      }).catch(function(error) {
+        toast.error("Config Categories does't exists!")
+      })
+      this.setState({configs: data})
+    }
+
+    handleChange=event=>
+  {
+    const{name,value} = event.target;
+    let form = this.state.configs;
+    form[name] = value
+    this.setState({form})
+  }
+    onSubmit = () => {
+      let dataForm = document.getElementById('update')
+      let formData = new FormData(dataForm);
+      let config = 
+      {     
+          headers: { 'content-type': 'multipart/form-data' },
+          headers: {"Authorization" : `Bearer ${this.state.token}`}
+      }
+    
+  
+        axios.post("admin/category/"+this.props.match.params.id, 
+                   formData,config)
+            .then(function (response) {
+               toast.success(response.data.message)
+              
+            })
+            .catch(function (error) {
+              toast.error("created failed !")
+            });
+
+            setTimeout(
+              function() {
+                this.setState({
+                  toDashboard: 1
+                })
+              }
+              .bind(this),
+              3000
+             );
+       
+    };
+
+  
+
+    render()
+  {
+    if (this.state.toDashboard === 1) {
+      return <Redirect to={`${process.env.PUBLIC_URL}/dashboard/products/categories`} />
+    }
+  
+    if (!this.state.configs) {
+      return <div>please wait ...</div>;
+    }
+    return(
+      <Fragment>
+          <Breadcrumb parent={i18next.t('createNew')} title={i18next.t('Category')}/>
       <Container fluid={true}>
-        <Row>
-          <Col sm="12">
-            
-                <Form id="create" className="needs-validation" noValidate="" onSubmit={handleSubmit(onSubmit)}>
+          <Row>
+           <Col  sm="12" xl="6 xl-100">
+              <Card>
+                <CardBody>
+                  <Row>
+                    <Col sm="3"className="tabs-responsive-side">
+                    <Nav className="flex-column nav-pills border-tab nav-left" >
+        
+                      <NavItem>
+                          <NavLink href="#javascript"  
+                          className={this.state.LeftLineTab === 1 ? 'active' : ''} 
+                          onClick={() => this.setState({LeftLineTab:1})}>
+                            {i18next.t('maindata')}
+                            </NavLink>
+                      </NavItem>
+
+                      <NavItem>
+                          <NavLink href="#javascript"  
+                          className={this.state.LeftLineTab === 2 ? 'active' : ''} 
+                          onClick={() => this.setState({LeftLineTab:2})}>
+                             {i18next.t('arabicData')}</NavLink>
+                      </NavItem>
+
+                      <NavItem>
+                          <NavLink href="#javascript"  
+                          className={this.state.LeftLineTab === 3 ? 'active' : ''} 
+                          onClick={() => this.setState({LeftLineTab:3})}>
+                            {i18next.t('englishData')}</NavLink>
+                      </NavItem>
                   
-                  <div className="form-row">
-                    <Col md="5 mb-3">
-                      
-                      <Input className="form-control" name="title:ar" type="text" value={titlear}   placeholder="Arabic Title" innerRef={register({ required: true })} />
-                      <span>{errors.title && 'Arabic Title is required'}</span>
-                      <div className="valid-feedback">Looks good!</div>
-                    </Col>
-                    <Col md="5 mb-3">
+                  </Nav>
+                  </Col>
+                  <Col sm="9">
+                  <Form id="update" className="needs-validation" noValidate="" >
+                  <Input  name="_method" type="hidden" value="PUT"   />
+                        <div className="form-row">
+                      <TabContent className="tab-content col-md-12" activeTab={this.state.LeftLineTab}>
+              
+
+                        <TabPane  className="fade show" tabId={1}>
+                             
+                               <Row>
+                                <Col md="12 mb-3">
+                                       <label>{i18next.t('image')}</label>
+                                       <Input className="form-control" 
+                                         name="image" type="file"
+                                         id="image"
+                                         onChange={this.handleChange}  
+                                         placeholder="image" />
+                                       <div className="valid-feedback">Looks good!</div>
+                                     </Col>
+                                </Row>
+                           
                     
-                      <Input  className="form-control" name="title:en" type="text" value="fsd" placeholder="English Title" innerRef={register({ required: true })} />
-                      <span>{errors.title && 'English Title is required'}</span>
-                      <div className="valid-feedback">Looks good!</div>
-                    </Col>
+                                </TabPane>
 
-                    <Col md="2 mb-3">
-                        <Button  color={categoryForm.btnColor}>{categoryForm.btnName}</Button>
-                    </Col>
 
-                  </div>
-                 
-                 
-                </Form>
-             
-          </Col>
-        </Row>
-      </Container>
-    </Fragment>
-  );
-};
+                                
+                        <TabPane  className="fade show" tabId={2}>
+                             
+                             <Row>
+                              <Col md="12 mb-3">
+                                     <label>{i18next.t('name')}</label>
+                                     <Input className="form-control" 
+                                       name="namear" type="text"
+                                       id="namear"
+                                       value={this.state.configs.namear}
+                                       onChange={this.handleChange}  
+                                       placeholder="Arabic Name" />
+                                     <div className="valid-feedback">Looks good!</div>
+                                   </Col>
+                              </Row>
+                         
+                  
+                              </TabPane>
 
-export default  EditCategoryConfig ;
+
+                              <TabPane  className="fade show" tabId={3}>
+                             
+                             <Row>
+                              <Col md="12 mb-3">
+                                     <label>{i18next.t('name')}</label>
+                                     <Input className="form-control" 
+                                       name="nameen" type="text"
+                                       id="nameen"
+                                       value={this.state.configs.nameen}
+                                       onChange={this.handleChange}  
+                                       placeholder="English Name" />
+                                     <div className="valid-feedback">Looks good!</div>
+                                   </Col>
+                              </Row>
+                         
+                  
+                              </TabPane>
+                      </TabContent>
+
+                      
+                      <Col md="2 mb-3">
+                            <Button onClick={this.onSubmit} color="primary">
+                                {i18next.t('update')}
+                            </Button>
+                        </Col>
+
+                         </div>
+                      </Form>
+                  </Col>
+                  </Row>
+              </CardBody>
+              </Card>
+               </Col>
+         </Row>
+        </Container>
+        </Fragment>
+  
+    )
+  
+}
+
+}
+ 
+
+export default withRouter(EditCategory);

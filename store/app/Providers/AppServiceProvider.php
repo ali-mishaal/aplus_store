@@ -24,6 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+     
         Schema::defaultStringLength(191);
+        $langApp = isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])?$_SERVER['HTTP_ACCEPT_LANGUAGE']:'en';
+        \App::setLocale($langApp);
     }
 }

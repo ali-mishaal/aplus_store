@@ -1,130 +1,184 @@
-import React, { Fragment,useEffect,useState,useCallback,useMemo} from 'react';
+import React, { Fragment} from 'react';
 import Breadcrumb from '../../layout/breadcrumb'
 import differenceBy from 'lodash/differenceBy';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component'
-import {tableData} from '../../data/dummyTableData'
 import { Container,Row,Col,Card,CardHeader,CardBody} from 'reactstrap';
-import EditCategoryConfig from './edit' 
+import { Link } from 'react-router-dom'
 import axios from 'axios'
+import i18next from 'i18next'
 
-
-const Category = () =>  {
-   
-  const [selectedRows, setSelectedRows] = useState([]);
-  const [toggleCleared, setToggleCleared] = useState(false);
-  const [category, setCategory] = useState([]);
-
-  const [data, setData] = useState({});
-  const [isUpdate , setIsUpdate] =useState(false);
-  
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/api/configCategory")
-      .then(function(response) {
-        setData(response.data.data);
-      
-      }).catch(function(error) {
-        toast.error("Config Categories does't exists!")
-      })
-  }, []);
-
-  
-const editRecord =(props)=>
+class Category extends React.Component
 {
-  axios.get("http://127.0.0.1:8000/api/configCategory/"+props.id)
-  .then(function(response) {
-    setCategory(response.data.date)
-  }).catch(function(error) {
-    toast.error("please try again!")
-  })
-  
-}
- const tableColumns = [
+    constructor()
     {
-        name: 'ID',
-        selector: 'id', 
-        sortable: true,
-        center:true,
-    },
-    {
-        name: 'title',
-        selector: 'title',
-        sortable: true,
-        center:true,
-    },  {
-        name: "action",
-        text: "Action",
-        className: "action",
-        width: 100,
-        align: "left",
-        sortable: false,
-        cell: record => { 
-            return (
-                <Fragment>
-                    <button
-                        className="btn btn-primary btn-sm"
-                        onClick={() => editRecord(record)}
-                        style={{marginRight: '5px'}}>
-                        <i className="fa fa-edit"></i>
-                    </button>
-                </Fragment>
-            );
-        }
+      super()
+      this.state=
+      {
+        selectedRows:'',
+        toggleCleared:false,
+        category:'',
+        data:'',
+        token:''
+      }
+
+      
     }
+
    
-   
-  ]
-
-
-
-  const handleRowSelected = useCallback(state => {
-      setSelectedRows(state.selectedRows);
-    }, []);
-
-    const contextActions = useMemo(() => {
-      const handleDelete = () => {
-        
-        if (window.confirm(`Are you sure you want to delete:\r ${selectedRows.map(r => r.title)}?`)) {
-          setToggleCleared(!toggleCleared);
-          axios.post('http://127.0.0.1:8000/api/configCategory/1', {
-            data: JSON.stringify(selectedRows),
-            _method: 'DELETE'
-          })
-          .then(function (response) {
-             toast.success("Successfully Deleted !")
-          })
-          .catch(function (error) {
-            toast.error("delete failed !")
-          });
-         
-        }
-      };
   
-      return <button key="delete" className="btn btn-danger" onClick={handleDelete}>Delete</button>;
-    }, [data, selectedRows, toggleCleared]);
 
-    return (
-        <Fragment>
-        <Breadcrumb parent="Setting" title="Catgeory"/>
+    setName = (data) => {
+      this.setState({ data: data })
+    }
+
+    changeCategory = () => {
+      this.setState({ category: '' })
+    }
+
+    componentDidMount()
+    {
+       this.setState({token:localStorage.getItem('_token')})
+       setTimeout(
+        function() {
+          this.get()
+        }
+        .bind(this),
+        3000
+       );
+       
+    }
+
+   
+  
+    async get()
+    {
+     
+      let data = await axios.get("admin/category",{ headers: {"Authorization" : `Bearer ${this.state.token}`} })
+      .then(function(response) {
+        return response.data.data
+      }).catch(function(error) {
+        // toast.error("Config Categories does't exists!")
+        console.log(error)
+      })
+      this.setState({data: data});
+    }
+
+    async editRecord(item)
+    {
+      let data = await axios.get("admin/category/"+item.id,{ headers: {"Authorization" : `Bearer ${this.state.token}`} })      .then(function(response) {
+        return response.data.data
+      }).catch(function(error) {
+        toast.error("Countries does't exists!")
+      })
+      const category={namear:data.titlear,nameen:data.titleen,id:item.id}
+      this.setState({category: category })
+    }
+
+    tableColumns = [
+      {
+          name: i18next.t('id'),
+          selector: 'id', 
+          sortable: true,
+          center:true,
+      },
+      {
+          name: i18next.t('name'),
+          selector: 'name',
+          sortable: true,
+          center:true,
+      },
+      {
+        name: i18next.t('image'),
+        text: 'image',
+        sortable: true,
+        center:true,
+        cell: record => { 
+          return (
+              <Fragment>
+                  <img style={{width:"100px",padding:"5px"}} src={record.image} />
+              </Fragment>
+          );
+      }
+      }, 
+       {
+          name: i18next.t('action'),
+          text: "Action",
+          className: "action",
+          width: 100,
+          align: "left",
+          sortable: false,
+          cell: record => { 
+              return (
+                  <Fragment>
+                      <Link
+                          className="btn btn-primary btn-sm active"
+                          to={`${process.env.PUBLIC_URL}/dashboard/products/categories/edit/${record.id}`}
+                          style={{marginRight: '5px'}}>
+                          <i className="fa fa-edit"></i>
+                      </Link>
+                  </Fragment>
+              );
+          }
+      }
+     
+     
+    ]
+
+    handleRowSelected= state => {
+      this.setState({ selectedRows: state.selectedRows });
+    }
+
+  
+
+   handleDelete = () => {
+                                    
+    if (window.confirm(`Are you sure you want to delete:\r ${this.state.selectedRows.map(r => r.name)}?`)) {
+      this.setState({ toggleCleared: !this.state.toggleCleared });
+      let deleteCategory = axios.post("admin/category/1", {
+        data: JSON.stringify(this.state.selectedRows),
+        _method: 'DELETE'
+      },
+      { headers: {"Authorization" : `Bearer ${this.state.token}`} }
+      )
+      .then(function (response) {
+         return toast.success("Successfully Deleted !")
+      })
+      .catch(function (error) {
+        toast.error("delete failed !")
+      });
+      this.setState({data: differenceBy(this.state.data, this.state.selectedRows, 'name')});
+    }
+  };
+    
+ 
+  render()
+  {
+    
+    return(
+      <Fragment>
+        <Breadcrumb parent={i18next.t('Products')} title={i18next.t('Category')}/>
         <Container fluid={true}>
                 <Row>
                     
                     <Col sm="12">
                         <Card>
                             <CardHeader>
-                                <EditCategoryConfig  category={category}/>
+                                 <Link className="btn btn-primary active" to={`${process.env.PUBLIC_URL}/dashboard/products/categories/create`}>
+                                     {i18next.t('createnew')}
+                                  </Link>
                             </CardHeader>
                             <CardBody>
                               <DataTable
-                                data={data}
-                                columns={tableColumns}
+                                data={this.state.data}
+                                columns={this.tableColumns}
                                 striped={true}
                                 center={true}
                                 selectableRows
                                 persistTableHead
-                                contextActions={contextActions}
-                                onSelectedRowsChange={handleRowSelected}
-                                clearSelectedRows={toggleCleared}
+                                contextActions= {<button key="delete" className="btn btn-danger" onClick={this.handleDelete}>Delete</button>}
+                                onSelectedRowsChange={this.handleRowSelected}
+                                clearSelectedRows={this.state.toggleCleared}
                               />
                             
                             </CardBody>
@@ -134,7 +188,9 @@ const editRecord =(props)=>
             </Container>
         </Fragment>
     );
+  }
+ 
+}
 
-};
 
-export default Category;
+export default Category ;

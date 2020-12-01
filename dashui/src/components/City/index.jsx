@@ -1,9 +1,8 @@
-import React, { Fragment,useEffect,useState,useCallback,useMemo} from 'react';
+import React, { Fragment} from 'react';
 import Breadcrumb from '../../layout/breadcrumb'
 import differenceBy from 'lodash/differenceBy';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component'
-import {tableData} from '../../data/dummyTableData'
 import { Container,Row,Col,Card,CardHeader,CardBody} from 'reactstrap';
 import EditCity from './edit' 
 import axios from 'axios'
@@ -44,7 +43,7 @@ class City extends React.Component
 
     async getCountry()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country")
+      let data = await axios.get("country")
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -56,7 +55,7 @@ class City extends React.Component
 
     async get()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/city")
+      let data = await axios.get("city")
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -69,7 +68,7 @@ class City extends React.Component
 
     async editRecord(item)
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/city/"+item.id)
+      let data = await axios.get("city/"+item.id)
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -131,7 +130,7 @@ class City extends React.Component
                                     
     if (window.confirm(`Are you sure you want to delete:\r ${this.state.selectedRows.map(r => r.title)}?`)) {
       this.setState({ toggleCleared: !this.state.toggleCleared });
-      let deleteCategory = axios.post('https://aplus-code.com/alhabbal/store/api/city/1', {
+      let deleteCategory = axios.post('city/1', {
         data: JSON.stringify(this.state.selectedRows),
         _method: 'DELETE'
       })

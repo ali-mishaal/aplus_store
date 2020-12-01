@@ -16,13 +16,11 @@ class ProductRequest extends FormRequest
             'namear' => 'required|string',
             'nameen' => 'required|string',
             'category_id' => 'required|numeric',
-            'measurement_id' => 'required|numeric',
+            'measurement_id' => 'required',
             'descriptionar' => 'required|string',
             'descriptionen' => 'required|string',
             'quantity' => 'required|numeric',
             'model' => 'required|string',
-            'attribute_id'=>'required',
-            'attributeValue'=>'required',
             'image'  => 'required|image',
             'imgs'  => 'required'
         ];

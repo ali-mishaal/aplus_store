@@ -1,10 +1,7 @@
-import React, { useState ,useEffect, Fragment,componentDidUpdate } from 'react';
-import Breadcrumb from '../../layout/breadcrumb'
-import {useForm} from 'react-hook-form'
-import {Container,Row,Col,Card,CardHeader,CardBody,Button,Form,FormGroup,Label,Input,InputGroup,InputGroupAddon,InputGroupText} from 'reactstrap'
+import React, { Fragment } from 'react';
+import {Container,Row,Col,Button,Form,Input} from 'reactstrap'
 import axios from 'axios'
 import { toast } from 'react-toastify';
-import { Category } from 'emoji-mart';
 
 class EditGovern extends React.Component
 {
@@ -31,10 +28,7 @@ class EditGovern extends React.Component
     
   }
 
-  isEmpty(obj)
-  {
-    return Object.entries(obj).length ===0 && obj.constructor===Object;
-  }
+
   componentDidUpdate(prevProps)
   {
  
@@ -62,7 +56,7 @@ class EditGovern extends React.Component
    onSubmit = () => {
     let dataForm = document.getElementById('create')
     let formData = new FormData(dataForm);
-    let urlApi = "https://aplus-code.com/alhabbal/store/api/country/"+this.state.form.id 
+    let urlApi = "country/"+this.state.form.id 
     let config = 
     {     
         headers: { 'content-type': 'multipart/form-data' }
@@ -100,7 +94,7 @@ class EditGovern extends React.Component
 
   async get()
   {
-    let data = await axios.get("https://aplus-code.com/alhabbal/store/api/country")
+    let data = await axios.get("country")
     .then(function(response) {
       return response.data.data
     }).catch(function(error) {

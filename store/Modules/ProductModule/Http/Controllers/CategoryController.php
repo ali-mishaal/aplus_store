@@ -5,13 +5,13 @@ namespace Modules\ProductModule\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Modules\ProductModule\Repository\CategoryRepository;
+use Modules\ProductModule\Repository\CatRepository;
 use Modules\ProductModule\Http\Requests\CategoryRequest;
 use Modules\ProductModule\Http\Requests\CategoryUpdateRequest;
 
 class CategoryController extends Controller
 {
-    use CategoryRepository;
+    use CatRepository;
 
     public function index()
     {
@@ -31,7 +31,7 @@ class CategoryController extends Controller
         return $createCategory;
     }
 
-   
+
     public function show($id)
     {
         $category = $this->showCategory($id);
@@ -45,11 +45,13 @@ class CategoryController extends Controller
         return $updateCategory;
     }
 
-   
+
     public function destroy(Request $request,$id)
     {
         $deleteCategory = $this->deleteCategory($request->except('_method'));
         return $deleteCategory;
-        
+
     }
+
+    
 }

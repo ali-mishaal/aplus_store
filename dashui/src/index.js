@@ -1,17 +1,29 @@
-import React, { Fragment,useState,useEffect } from 'react'
+import React, { Fragment,useState,Suspense,useEffect } from 'react'
 import ReactDOM from 'react-dom';
-import './index.scss';
+
+
+
+
+
 import App from './components/app'
+import UiApp from './UiComponent/app'
+
 import firebase_app from './data/base';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import store from './store'
-import { HashRouter as Router,BrowserRouter,Route,Switch,Redirect} from 'react-router-dom'
+import { HashRouter as Router,Route,Switch,Redirect} from 'react-router-dom'
+import {useHistory} from 'react-router-dom'
 
 import { CSSTransition,TransitionGroup } from 'react-transition-group'
-import {routes} from './route';
-import ConfigDB  from './data/customizer/config'
 
+import {routes} from './route';
+import {uiroutes} from './route/uiroute'
+
+import ConfigDB  from './data/customizer/config'
+import './i18next';
+import i18next from 'i18next';
+import axios from 'axios'
 
 
 // Signin page
@@ -19,6 +31,7 @@ import Signin from './auth/signin'
 
 // Authentication
 import Login from "./pages/authentication/login"
+
 // import LoginWithBgImage from "./pages/authentication/loginWithBgImage"
 // import LoginWithBgVideo from "./pages/authentication/loginWithBgVideo"
 // import Register from "./pages/authentication/register"
@@ -43,53 +56,100 @@ import Login from "./pages/authentication/login"
 
 // Maintenanc
 // import Maintenance from "./pages/maintenance"
+const lang = localStorage.getItem('lang')||'en';
+const token = localStorage.getItem('_token')||'';
+
+i18next.changeLanguage(lang)
+
+axios.defaults.headers.common['Accept-Language']=lang;
+axios.defaults.baseURL='http://127.0.0.1:8000/api/';
+   
 
 const Root = (props) =>  {
+ 
   const user =()=> localStorage.getItem('user')||null
   const [anim, setAnim] = useState("");
   const animation = localStorage.getItem("animation") || ConfigDB.data.router_animation || 'fade'
-  // const abortController = new AbortController();
+  const abortController = new AbortController();
   const [currentUser, setCurrentUser] = useState(user);
 
 
+  useEffect(() => {
+  
+    if(window.location.href.indexOf('dashboard') > -1 || window.location.href.indexOf('admin/login')>-1) 
+    {
+      require('./index.scss')
+    }
+     
+    if(window.location.href.indexOf('dashboard') == -1 && window.location.href.indexOf('admin/login')==-1) 
+    {
+      require('./uiAssets/app.css');
+    }
+
+    if(window.location.href.indexOf('dashboard') == -1 && window.location.href.indexOf('admin/login')==-1 && lang =='ar') 
+    {
+      require('./uiAssets/css/styleRtl.css');
+    }
+
+    setAnim(animation)
+    setCurrentUser(localStorage.getItem('user'));
+    console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
+    console.disableYellowBox = true;
+    return function cleanup() {
+        abortController.abort();
+      }
+    // eslint-disable-next-line
+  }, []);
+  
 
   return(
     <Fragment>
       <Provider store={store}>
-      <Router history={'/'} basename={`/`}>
+      <Router  history={'/'} basename={`/`}>
 <Switch>
-  <Route  path={`${process.env.PUBLIC_URL}/login`} component={Signin} />
-  <Route  path={`${process.env.PUBLIC_URL}/pages/auth/login`} component={Login}></Route>
+  <Route  path={`${process.env.PUBLIC_URL}/admin/login`} component={Signin}></Route>
+ 
+       {window.location.href.indexOf('dashboard') > -1 && 
+         
+          <App>
+            <TransitionGroup>
+              {routes.map(({ path, Component }) => (
+              <Route key={path} exact   path={`${process.env.PUBLIC_URL}${path}`}>
+                  {({ match }) => ( 
+                      <CSSTransition 
+                      in={match != null}
+                      timeout={100}
+                      classNames={anim} 
+                      unmountOnExit
+                      >
+                      <div><Component/></div>
+                      </CSSTransition> 
+                  )}
+              </Route>
+              ))}
 
-  {
-   currentUser !== null ?
-  <App>
-    
-      <Route exact path={`${process.env.PUBLIC_URL}/`} render={() => {
-            return (<Redirect to={`${process.env.PUBLIC_URL}/dashboard/default`} />)
-        }} />
-
-      <TransitionGroup>
-        {routes.map(({ path, Component }) => (
-            <Route key={path} exact   path={`${process.env.PUBLIC_URL}${path}`}>
-                {({ match }) => ( 
-                    <CSSTransition 
-                    in={match != null}
-                    timeout={100}
-                    classNames={anim} 
-                    unmountOnExit
-                    >
-                    <div><Component/></div>
-                    </CSSTransition> 
-                )}
-            </Route>
-            ))}
-      </TransitionGroup>
-
-  </App>
-      :
-     <Redirect to={`${process.env.PUBLIC_URL}/login`} />
-   } 
+            </TransitionGroup>  
+           </App>
+        }
+        <UiApp>
+        <TransitionGroup>
+          {uiroutes.map(({ path, Component }) => (
+              <Route key={path} exact   path={`${process.env.PUBLIC_URL}${path}`}>
+                  {({ match }) => ( 
+                      <CSSTransition 
+                      in={match != null}
+                      timeout={100}
+                      classNames={anim} 
+                      unmountOnExit
+                      >
+                      <div><Component/></div>
+                      </CSSTransition> 
+                  )}
+              </Route>
+              ))}
+          </TransitionGroup>
+        </UiApp>
+  
    </Switch> 
 </Router>
       </Provider>
@@ -100,13 +160,13 @@ const Root = (props) =>  {
 
 ReactDOM.render(
   <React.StrictMode>
+    <Suspense fallback={(<div>loading......</div>)}>
+      
     <Root />
+    </Suspense>
   </React.StrictMode>,
   document.getElementById('root')
 );
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// // Learn more about service workers: https://bit.ly/CRA-PWA
-// serviceWorker.unregister();
+
  

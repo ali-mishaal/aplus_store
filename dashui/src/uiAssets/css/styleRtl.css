@@ -1,0 +1,98 @@
+@import url("https://fonts.googleapis.com/css?family=Cairo&display=swap");
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+html,body{
+    overflow-x: hidden;
+}
+body{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    color: #222222;
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+}
+
+
+
+/* start nav-header */
+
+.mr-auto, .mx-auto {
+    margin-right: auto!important;
+    margin-left: 0!important;
+    
+}
+.pad-nav{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.accordion-faq.accordion .card-header:after{
+    left: 1.5rem;
+    right: inherit;
+}
+/*
+.nav{
+    justify-content: space-between;
+    align-items: center;
+}
+*/
+.nav .rt-side a{
+    color: #5c5c5c;
+    font-weight: bold;
+}
+.nav .lt-side input{
+    border-radius: 0 100px 100px 0;
+}
+.nav .lt-side button{
+    border-radius: 100px 0 0 100px;
+}
+.footer .company ul li i {
+    margin-left: 5px;
+}
+/* end nav-header */
+
+
+.carousel .carousel-item{
+    margin-left: -100% !important;
+    margin-right: inherit;
+    float: right;
+}
+
+/* //////////////   start media queries  ///////////////  */
+
+@media (min-width: 320px) and (max-width: 414.98px) { 
+
+}
+
+/*// Extra small devices (portrait phones, less than 576px)*/
+@media (min-width: 415px) and (max-width: 575.98px) { 
+
+}
+
+/*// Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) and (max-width: 767.98px) { 
+
+}
+
+/*// Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) and (max-width: 991.98px) { 
+
+}
+
+/*// Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) and (max-width: 1199.98px) { 
+
+}
+
+/*// Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) { 
+
+}
+
+.owl-stage-outer
+{
+    direction: ltr !important;
+}

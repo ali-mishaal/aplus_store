@@ -1,10 +1,8 @@
-import React, { useState ,useEffect, Fragment,componentDidUpdate } from 'react';
-import Breadcrumb from '../../layout/breadcrumb'
-import {useForm} from 'react-hook-form'
-import {Container,Row,Col,Card,CardHeader,CardBody,Button,Form,FormGroup,Label,Input,InputGroup,InputGroupAddon,InputGroupText} from 'reactstrap'
+import React, { Fragment } from 'react';
+import {Container,Row,Form,Button,Input,Col} from 'reactstrap'
 import axios from 'axios'
 import { toast } from 'react-toastify';
-import { Category } from 'emoji-mart';
+import i18next from 'i18next'
 
 class EditCategoryConfig extends React.Component
 {
@@ -14,7 +12,7 @@ class EditCategoryConfig extends React.Component
     this.state=
     {
       form:{titlear:"",titleen:"",id:"",isedit:false},
-      btnname:'save',
+      btnname:i18next.t('create'),
       btncolor:'primary',
       isUpdate:false,
       category:'',
@@ -31,10 +29,10 @@ class EditCategoryConfig extends React.Component
     
   }
 
-  isEmpty(obj)
-  {
-    return Object.entries(obj).length ===0 && obj.constructor===Object;
-  }
+  // isEmpty(obj)
+  // {
+  //   return Object.entries(obj).length ===0 && obj.constructor===Object;
+  // }
   componentDidUpdate(prevProps)
   {
  
@@ -43,7 +41,7 @@ class EditCategoryConfig extends React.Component
       
         this.setState({
           form: {...this.props.category,isedit:true},
-          btnname:'update',
+          btnname:i18next.t('update'),
           btncolor:'danger',
 
         })
@@ -62,7 +60,7 @@ class EditCategoryConfig extends React.Component
    onSubmit = () => {
     let dataForm = document.getElementById('create')
     let formData = new FormData(dataForm);
-    let urlApi = "https://aplus-code.com/alhabbal/store/api/configCategory/"+this.state.form.id 
+    let urlApi = "admin/configCategory/"+this.state.form.id 
     let config = 
     {     
         headers: { 'content-type': 'multipart/form-data' }
@@ -78,30 +76,30 @@ class EditCategoryConfig extends React.Component
           .then(function (response) {
              toast.success(response.data.message)
           }).catch(function (error) {
+            console.log(error)
             toast.error('error')
           });
 
           setTimeout(
             function() {
               this.get()
-          this.props.changeCategory()
-          this.setState({
-            form: {titlear:"",titleen:"",id:"",isedit:false},
-            btnname:'create',
-            btncolor:'primary',
-  
-          })
+              this.props.changeCategory()
+              this.setState({
+                form: {namear:"",nameen:"",id:"",isedit:false},
+                btnname:i18next.t('create'),
+                btncolor:'primary',
+      
+              })
             }
             .bind(this),
             3000
         );
-
           
   };
 
   async get()
   {
-    let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory")
+    let data = await axios.get("admin/configCategory")
     .then(function(response) {
       return response.data.data
     }).catch(function(error) {
@@ -119,7 +117,7 @@ class EditCategoryConfig extends React.Component
       <Container fluid={true}>
         <Row>
           <Col sm="12">
-            
+               
                 <Form id="create" className="needs-validation" noValidate="" >
                   
                   <div className="form-row">
@@ -128,7 +126,7 @@ class EditCategoryConfig extends React.Component
                       <Input className="form-control" 
                          name="titlear" type="text" 
                          value={this.state.form.titlear}  
-                         onChange={this.handleChange} placeholder="Arabic Title"  />
+                         onChange={this.handleChange} placeholder={i18next.t('namear')}  />
                       <span>{this.form.errors.title && 'Arabic Title is required'}</span>
                       <div className="valid-feedback">Looks good!</div>
                     </Col>
@@ -137,8 +135,8 @@ class EditCategoryConfig extends React.Component
                       <Input  className="form-control" 
                       name="titleen" type="text"  
                       value={this.state.form.titleen} 
-                      onChange={this.handleChange} placeholder="English Title"  />
-                      <span>{this.form.errors.title && 'English Title is required'}</span>
+                      onChange={this.handleChange} placeholder={i18next.t('nameen')}  />
+                      <span>{this.form.errors.nameen && 'English Title is required'}</span>
                       <div className="valid-feedback">Looks good!</div>
                     </Col>
 

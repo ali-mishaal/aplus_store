@@ -1,14 +1,14 @@
-import React, { Fragment,useEffect,useState,useCallback,useMemo} from 'react';
+import React, { Fragment} from 'react';
 import Breadcrumb from '../../layout/breadcrumb'
 import differenceBy from 'lodash/differenceBy';
 import { toast } from 'react-toastify';
 import DataTable from 'react-data-table-component'
-import {tableData} from '../../data/dummyTableData'
 import { Container,Row,Col,Card,CardHeader,CardBody} from 'reactstrap';
 import EditCategoryConfig from './edit' 
 import axios from 'axios'
+import i18next from 'i18next'
 
-class Category extends React.Component
+class CategoryConfig extends React.Component
 {
     constructor()
     {
@@ -40,7 +40,7 @@ class Category extends React.Component
   
     async get()
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory")
+      let data = await axios.get("admin/configCategory")
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -52,7 +52,7 @@ class Category extends React.Component
 
     async editRecord(item)
     {
-      let data = await axios.get("https://aplus-code.com/alhabbal/store/api/configCategory/"+item.id)
+      let data = await axios.get("admin/configCategory/"+item.id)
       .then(function(response) {
         return response.data.data
       }).catch(function(error) {
@@ -64,13 +64,13 @@ class Category extends React.Component
 
     tableColumns = [
       {
-          name: 'ID',
+          name: i18next.t('id'),
           selector: 'id', 
           sortable: true,
           center:true,
       },
       {
-          name: 'title',
+          name: i18next.t('name'),
           selector: 'title',
           sortable: true,
           center:true,
@@ -106,14 +106,14 @@ class Category extends React.Component
 
    handleDelete = () => {
                                     
-    if (window.confirm(`Are you sure you want to delete:\r ${this.state.selectedRows.map(r => r.title)}?`)) {
+    if (window.confirm(`${i18next.t('Aresuredelete')}:\r ${this.state.selectedRows.map(r => r.title)}?`)) {
       this.setState({ toggleCleared: !this.state.toggleCleared });
-      let deleteCategory = axios.post('https://aplus-code.com/alhabbal/store/api/configCategory/1', {
+      let deleteCategory = axios.post('admin/configCategory/1', {
         data: JSON.stringify(this.state.selectedRows),
         _method: 'DELETE'
       })
       .then(function (response) {
-         return toast.success("Successfully Deleted !")
+         return toast.success(i18next.t('deletedSsucces'))
       })
       .catch(function (error) {
         toast.error("delete failed !")
@@ -128,7 +128,7 @@ class Category extends React.Component
     
     return(
       <Fragment>
-        <Breadcrumb parent="Setting" title="Catgeory"/>
+        <Breadcrumb parent={i18next.t('setting')} title={i18next.t('configCategory')}/>
         <Container fluid={true}>
                 <Row>
                     
@@ -162,4 +162,4 @@ class Category extends React.Component
 }
 
 
-export default Category;
+export default CategoryConfig;

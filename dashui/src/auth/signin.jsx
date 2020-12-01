@@ -1,16 +1,18 @@
 import React,{Fragment,useState,useEffect} from 'react';
 import man from '../assets/images/dashboard/profile.jpg';
 import {Container,Row,Col,CardBody,Form,FormGroup,Input,Label,Button} from 'reactstrap'
-import app, { googleProvider,facebookProvider,twitterProvider,githubProvider } from '../data/base'
+// import app, { googleProvider,facebookProvider,twitterProvider,githubProvider } from '../data/base'
 import { toast } from 'react-toastify';
-import {useHistory} from 'react-router-dom'
+import {useHistory,Route,Switch,Redirect} from 'react-router-dom'
+
 import axios from 'axios'
 const Login = (props) => {
+  const [current, setCurrent] = useState(props.current);
   const history = useHistory();
-  const [email, setEmail] = useState("test@gmail.com");
-  const [password, setPassword] = useState("test123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading,setLoading] = useState(false) 
-  const [message,setMessage] =useState()
+  // const [message,setMessage] =useState()
   const [validate,setValidate] = useState(
   {
     message:"",
@@ -26,35 +28,35 @@ const Login = (props) => {
       localStorage.getItem('Name')
   );
 
+  const [user, setUser] = useState(
+    localStorage.getItem('user')
+);
+
+const [token, setToken] = useState(
+  localStorage.getItem('token')
+);
+
+const [id, setId] = useState(
+  localStorage.getItem('user_id')
+);
+
   useEffect(() => {
       localStorage.setItem('profileURL', value);
       localStorage.setItem('Name', name);
-  }, [value,name]);
+      localStorage.setItem('user', user);
+      localStorage.setItem('_token', token);
+      localStorage.setItem('user_id', id);
+      
+  }, [value,name,user,token,id]);
 
 const loginAuth = async () => {
   setLoading(true)
   try {
       const data = {email:email,password:password}
-      await axios.post("https://aplus-code.com/alhabbal/store/api/admin-auth/login",data)
+      let auth = await axios.post("admin-auth/login",data)
       .then(function(response) {
-        console.log(response.data)
-        localStorage.setItem('_token', response.data.access_token);
-        localStorage.setItem('user', response.data.user.name);
-        localStorage.setItem('user_id', response.data.user.id);
-        setValidate(
-          {
-            classbtn:"alert alert-success inverse alert-dismissible fade show",
-            message:"login success",
-            role:"alert",
-            icon:"icon-thumb-up alert-center"
-          }
-        )
-
-        setTimeout(() => {
-          history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
-          window.location.reload()
-        }, 200);
-
+        return response.data;
+        
       }).catch(function(error) {
         toast.error(error.response.data.error)
         setValidate(
@@ -68,6 +70,24 @@ const loginAuth = async () => {
        
       })
       
+        setUser(auth.user.name);
+        setToken(auth.access_token);
+        setId(auth.access_token);
+        setCurrent(auth.user.name);
+        setValidate(
+          {
+            classbtn:"alert alert-success inverse alert-dismissible fade show",
+            message:"login success",
+            role:"alert",
+            icon:"icon-thumb-up alert-center"
+          }
+        )
+
+        setTimeout(() => {
+          window.location.href=process.env.PUBLIC_URL+'/dashboard/default';
+              // history.push(`${process.env.PUBLIC_URL}/dashboard/default`);
+              // window.location.reload()
+        }, 3000);
       setLoading(false)
   } catch (error) {
       setTimeout(() => {
@@ -81,6 +101,7 @@ const loginAuth = async () => {
 
     return (
       <Fragment>
+      
         <div className="page-wrapper">
         <Container fluid={true} className="p-0">
           <div className="authentication-main m-0">

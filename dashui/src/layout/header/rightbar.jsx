@@ -1,13 +1,12 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import man from '../../assets/images/dashboard/profile.jpg'
-import { FileText, LogIn, Mail, User, MessageSquare, Bell, Minimize, Search, ShoppingCart, X } from 'react-feather';
+import { FileText, LogIn, Mail, User, Search } from 'react-feather';
 import { useHistory } from 'react-router-dom'
 import firebase_app from '../../data/base'
 import {
   setTranslations,
   setDefaultLanguage,
   setLanguageCookie,
-  setLanguage,
   translate,
 } from 'react-switch-lang';
 
@@ -19,12 +18,15 @@ import du from '../../assets/i18n/du.json';
 import cn from '../../assets/i18n/cn.json';
 import ae from '../../assets/i18n/ae.json';
 
+import { useTranslation } from 'react-i18next';
+
 setTranslations({ en, es, pt, fr, du, cn, ae });
 setDefaultLanguage('en');
 setLanguageCookie();
 
 const Rightbar = (props) => {
 
+  // const { t, i18n } = useTranslation();
   const user =()=> localStorage.getItem('user')||null
   const history = useHistory();
   const [profile, setProfile] = useState('');
@@ -32,11 +34,12 @@ const Rightbar = (props) => {
   const [searchresponsive, setSearchresponsive] = useState(false)
   const [langdropdown, setLangdropdown] = useState(false)
   const [moonlight, setMoonlight] = useState(false)
-  const [selected, setSelected] = useState("en")
+  // const [selected, setSelected] = useState("en")
 
-  const handleSetLanguage = (key) => {
-    setLanguage(key);
-    setSelected(key)
+  function handleSetLanguage (key)
+  {
+    localStorage.setItem('lang',key)
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -51,13 +54,13 @@ const Rightbar = (props) => {
     firebase_app.auth().signOut()
   }
 
-  const RedirectToChats = () => {
-    history.push(`${process.env.PUBLIC_URL}/app/chat-app`)
-  }
+  // const RedirectToChats = () => {
+  //   history.push(`${process.env.PUBLIC_URL}/app/chat-app`)
+  // }
 
-  const RedirectToCart = () => {
-    history.push(`${process.env.PUBLIC_URL}/app/ecommerce/cart`)
-  }
+  // const RedirectToCart = () => {
+  //   history.push(`${process.env.PUBLIC_URL}/app/ecommerce/cart`)
+  // }
 
   const UserMenuRedirect = (redirect) => {
     history.push(redirect)
@@ -117,7 +120,9 @@ const Rightbar = (props) => {
     }
   }
 
+  const lang = localStorage.getItem('lang')||'en';
   return (
+    
     <Fragment>
       <div className="nav-right col-8 pull-right right-menu">
         <ul className="nav-menus">
@@ -125,18 +130,20 @@ const Rightbar = (props) => {
             <div className={`translate_wrapper ${langdropdown ? 'active' : ''}`}>
               <div className="current_lang">
                 <div className="lang" onClick={() => LanguageSelection(langdropdown)}>
-                  <i className={`flag-icon flag-icon-${selected === "en" ? "us" : selected === "du" ? "de" : selected}`}></i>
-                  <span className="lang-txt">{selected}</span>
+                  <i className={`flag-icon flag-icon-${lang=='ar'?'ae':'us'}`}></i>
+                  <span className="lang-txt">{lang}</span>
                 </div>
               </div>
               <div className={` more_lang ${langdropdown ? 'active' : ''}`}>
-                <div className="lang" onClick={() => handleSetLanguage('en')}><i className="flag-icon flag-icon-us"></i><span className="lang-txt">English<span> (US)</span></span></div>
-                <div className="lang" onClick={() => handleSetLanguage('du')}><i className="flag-icon flag-icon-de"></i><span className="lang-txt">Deutsch</span></div>
-                <div className="lang" onClick={() => handleSetLanguage('es')}><i className="flag-icon flag-icon-es"></i><span className="lang-txt">Español</span></div>
-                <div className="lang" onClick={() => handleSetLanguage('fr')}><i className="flag-icon flag-icon-fr"></i><span className="lang-txt">Français</span></div>
-                <div className="lang" onClick={() => handleSetLanguage('pt')}><i className="flag-icon flag-icon-pt"></i><span className="lang-txt">Português<span> (BR)</span></span></div>
-                <div className="lang" onClick={() => handleSetLanguage('cn')}><i className="flag-icon flag-icon-cn"></i><span className="lang-txt">简体中文</span></div>
-                <div className="lang" onClick={() => handleSetLanguage('ae')}><i className="flag-icon flag-icon-ae"></i><span className="lang-txt">لعربية <span> (ae)</span></span></div>
+
+                <div className="lang" onClick={() => handleSetLanguage('en')}>
+                  <i className="flag-icon flag-icon-us"></i><span className="lang-txt">English<span> (US)</span></span>
+                </div>
+
+                <div className="lang" onClick={() => handleSetLanguage('ar')}>
+                  <i className="flag-icon flag-icon-ae"></i><span className="lang-txt">لعربية <span> (ae)</span></span>
+                </div>
+
               </div>
             </div>
           </li>
@@ -262,7 +269,7 @@ const Rightbar = (props) => {
               <li onClick={() => UserMenuRedirect(`${process.env.PUBLIC_URL}/app/users/userProfile`)}><User /><span>Account </span></li>
               <li onClick={() => UserMenuRedirect(`${process.env.PUBLIC_URL}/app/email-app`)}><Mail /><span>Inbox</span></li>
               <li onClick={() => UserMenuRedirect(`${process.env.PUBLIC_URL}/app/todo-app/todo`)}><FileText /><span>Taskboard</span></li>
-              <li onClick={logOut}><LogIn /><span>Log Out</span></li>
+              <li onClick={logOut}><LogIn /><span>Log Out </span></li>
             </ul>
           </li>
         </ul>
