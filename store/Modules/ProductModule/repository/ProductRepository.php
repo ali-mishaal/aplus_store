@@ -67,7 +67,6 @@ trait ProductRepository
               $attribute['product_id']=$createProduct->id;
               $createProductAttribute = ProductAttribute::create($attribute);
           }
-
          $responseSuccess = \ResponseHelper::getInstance()
          ->setMessage('created successfully')
          ->response();
@@ -88,6 +87,8 @@ trait ProductRepository
       $data['quantity']=$request['quantity'];
       $data['category_id']=$request['category_id'];
       $data['measurement_id']=$request['measurement_id'];
+     
+     
 
 
 
@@ -95,7 +96,6 @@ trait ProductRepository
     //   if(isset($request['imgs']))$data['imgs'] = $this->uploadAlbum($request['imgs'],'product');
 
 if(isset($request['imgs']))$data['imgs'] ='dsfdsf';
-
 
 
 
@@ -112,7 +112,6 @@ if(isset($request['imgs']))$data['imgs'] ='dsfdsf';
               $attribute['product_id']=$item->id;
               $createProductAttribute = ProductAttribute::create($attribute);
           }
-
          $responseSuccess = \ResponseHelper::getInstance()
          ->setMessage('updated successfully')
          ->response();

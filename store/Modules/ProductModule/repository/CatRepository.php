@@ -17,7 +17,6 @@ trait CatRepository
    public function getAllCategories()
    {
      $category = Category::where('parent',NULL)->get();
-
      if($category)
      {
         $data = CategoryResource::collection($category);
@@ -57,7 +56,6 @@ trait CatRepository
       if(isset($request['parent']))$data['parent'] = $request['parent'];
 
       $data['image'] = $this->uploadFile($request['image'],'category');
-
       $createCategory = Category::create($data);
       if($createCategory)
       {
@@ -97,7 +95,6 @@ trait CatRepository
    public function showCategory($id)
    {
       $item = Category::find($id);
-
       if($item)
      {
         $data = SingleResource::make($item);

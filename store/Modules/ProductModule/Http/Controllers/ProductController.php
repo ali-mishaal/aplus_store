@@ -37,7 +37,6 @@ class ProductController extends Controller
 
     public function update(Request $request, $id)
     {
-
         $UpdateProduct = $this->UpdateProduct($request->except('_method'),$id);
         return $UpdateProduct;
     }
